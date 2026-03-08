@@ -1,0 +1,2273 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Beaty</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  /* ── Beaty brand ── */
+  --brand-a:   #3B5BDB;   /* bleu */
+  --brand-b:   #7B2FF7;   /* violet */
+  --brand-c:   #F72585;   /* magenta/rose */
+  --grad:      linear-gradient(135deg, #3B5BDB 0%, #7B2FF7 50%, #F72585 100%);
+  --grad-soft: linear-gradient(135deg, rgba(59,91,219,0.12) 0%, rgba(123,47,247,0.10) 50%, rgba(247,37,133,0.08) 100%);
+  --grad-hero: linear-gradient(140deg, #3B5BDB 0%, #6B21D6 45%, #F72585 100%);
+
+  /* ── Surfaces ── */
+  --bg:       #F8F7FF;
+  --bg2:      #EFECFF;
+  --surface:  #FFFFFF;
+  --surface2: #F2EFFF;
+  --glass:    rgba(255,255,255,0.80);
+
+  /* ── Ink ── */
+  --ink:      #12102A;
+  --ink2:     #4A4672;
+  --ink3:     #8E8BAD;
+  --ink4:     #C0BDDA;
+
+  /* ── Accents (keep for event types) ── */
+  --sport:    #7B2FF7;
+  --sport-l:  #EDE6FF;
+  --busy:     #F72585;
+  --busy-l:   #FFE8F4;
+  --free:     #3B5BDB;
+  --free-l:   #E8EDFF;
+  --lime:     #00C896;
+  --lime-l:   #E0FFF6;
+  --amber:    #FF8C00;
+  --amber-l:  #FFF3E0;
+  --blue:     #3B5BDB;
+  --blue-l:   #E8EDFF;
+  --purple:   #7B2FF7;
+  --purple-l: #EDE6FF;
+  --rose:     #F72585;
+  --rose-l:   #FFE8F4;
+
+  /* ── Layout ── */
+  --border:   #E4E0F8;
+  --r:    18px;
+  --r-sm: 12px;
+  --r-xs: 8px;
+  --r-lg: 26px;
+  --sh:   0 2px 16px rgba(59,91,219,0.07);
+  --sh-md:0 6px 28px rgba(123,47,247,0.12);
+  --sh-lg:0 12px 48px rgba(123,47,247,0.18);
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: linear-gradient(160deg, #3B5BDB 0%, #7B2FF7 50%, #F72585 100%);
+  display: flex; justify-content: center; align-items: center;
+  min-height: 100vh; padding: 24px;
+}
+
+/* ═══════════ PHONE SHELL ═══════════ */
+.phone {
+  width: 393px; height: 852px;
+  background: var(--bg);
+  border-radius: 54px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.4),
+    0 40px 100px rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.6);
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  position: relative;
+}
+
+/* Dynamic island */
+.island {
+  position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+  width: 126px; height: 37px;
+  background: #0A0A0A;
+  border-radius: 20px;
+  z-index: 100;
+}
+
+.status-bar {
+  height: 54px; padding: 14px 28px 0;
+  display: flex; align-items: flex-end; justify-content: space-between;
+  flex-shrink: 0; position: relative; z-index: 10;
+  background: var(--bg);
+}
+.st-time { font-size: 15px; font-weight: 700; color: var(--ink); letter-spacing: -0.3px; }
+.st-icons { display: flex; align-items: center; gap: 5px; }
+.st-icons svg { width: 16px; height: 16px; fill: var(--ink); }
+.battery {
+  width: 25px; height: 13px; border: 1.5px solid var(--ink); border-radius: 3px; position: relative;
+  display: flex; align-items: center; padding: 2px;
+}
+.battery::after { content:''; position:absolute; right:-5px; top:50%; transform:translateY(-50%); width:3px; height:6px; background:var(--ink); border-radius:1px; }
+.battery-fill { height: 100%; width: 75%; background: var(--ink); border-radius: 1.5px; }
+
+.screens { flex: 1; overflow: hidden; position: relative; }
+.screen {
+  position: absolute; inset: 0;
+  overflow-y: auto; overflow-x: hidden;
+  opacity: 0; pointer-events: none;
+  transform: translateY(6px);
+  transition: opacity 0.28s cubic-bezier(.4,0,.2,1), transform 0.28s cubic-bezier(.4,0,.2,1);
+  scrollbar-width: none;
+  background: var(--bg);
+}
+.screen::-webkit-scrollbar { display: none; }
+.screen.active { opacity: 1; pointer-events: all; transform: translateY(0); }
+
+/* ═══════════ BOTTOM NAV ═══════════ */
+.bottom-nav {
+  height: 88px; padding: 0 12px 20px;
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255,255,255,0.5);
+  display: flex; align-items: center;
+  flex-shrink: 0; position: relative; z-index: 10;
+}
+.nav-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px;
+  cursor: pointer; padding: 10px 4px; border-radius: 16px;
+  transition: all 0.2s cubic-bezier(.4,0,.2,1);
+  position: relative;
+}
+.nav-pill {
+  width: 40px; height: 40px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  transition: all 0.25s cubic-bezier(.34,1.56,.64,1);
+  background: transparent;
+}
+.nav-item.active .nav-pill {
+  background: var(--grad);
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(123,47,247,0.35);
+}
+.nav-item.active .nav-pill { filter: brightness(0) invert(1); }
+.nav-label { font-size: 10px; font-weight: 700; color: var(--ink3); transition: color 0.2s; }
+.nav-item.active .nav-label { color: var(--brand-b); }
+
+/* ═══════════ SHARED ═══════════ */
+.px { padding-left: 22px; padding-right: 22px; }
+.section-head {
+  font-size: 11px; font-weight: 700; color: var(--ink3);
+  text-transform: uppercase; letter-spacing: 0.09em;
+  margin-bottom: 12px;
+}
+.card {
+  background: var(--surface);
+  border-radius: var(--r);
+  box-shadow: var(--sh);
+}
+.tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px; border-radius: 20px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.02em;
+}
+.tag-g { background: var(--sport-l); color: var(--brand-b); }
+.tag-a { background: var(--amber-l); color: var(--amber); }
+.tag-r { background: var(--rose-l); color: var(--rose); }
+.tag-b { background: var(--blue-l); color: var(--blue); }
+.tag-n { background: var(--surface2); color: var(--ink2); }
+.tag-p { background: var(--purple-l); color: var(--purple); }
+
+.btn-p {
+  background: var(--grad); color: #fff;
+  border: none; border-radius: 14px; cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px; font-weight: 800;
+  padding: 15px 20px; width: 100%;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.2s cubic-bezier(.4,0,.2,1);
+  box-shadow: 0 4px 20px rgba(123,47,247,0.35);
+  letter-spacing: -0.1px;
+}
+.btn-p:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(123,47,247,0.45); }
+.btn-p:active { transform: scale(0.98); }
+.btn-g {
+  background: transparent; color: var(--ink2);
+  border: 1.5px solid var(--border); border-radius: 14px; cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 600;
+  padding: 13px 20px;
+  transition: all 0.2s;
+}
+.btn-g:hover { border-color: var(--brand-b); color: var(--brand-b); background: var(--sport-l); }
+
+/* ═══════════════════════════════════
+   SCREEN 1 — AGENDA
+═══════════════════════════════════ */
+.agenda-header {
+  padding: 16px 22px 10px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 8;
+  background: linear-gradient(var(--bg) 85%, transparent);
+}
+.ah-left .hello { font-size: 12px; color: var(--ink3); font-weight: 600; letter-spacing: 0.04em; }
+.ah-left .title {
+  font-family: 'Nunito', sans-serif;
+  font-size: 28px; color: var(--ink); line-height: 1.1;
+  font-weight: 900; font-style: italic;
+}
+.ah-right { display: flex; gap: 8px; align-items: center; }
+.av-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s;
+  font-size: 13px; font-weight: 800;
+  border: none;
+}
+.av-me { background: var(--grad); color: #fff; box-shadow: 0 2px 10px rgba(123,47,247,0.4); }
+.av-add { background: var(--surface); color: var(--ink2); border: 1.5px solid var(--border); font-size: 18px; }
+.av-add:hover { background: var(--sport-l); border-color: var(--brand-b); color: var(--brand-b); }
+
+/* View toggle */
+.view-toggle {
+  display: flex; align-items: center;
+  background: var(--surface2); border-radius: 12px;
+  padding: 4px; margin: 0 22px 14px;
+  gap: 2px;
+}
+.vt-btn {
+  flex: 1; padding: 7px 12px; border-radius: 9px;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  transition: all 0.2s cubic-bezier(.4,0,.2,1);
+  border: none; font-family: 'Plus Jakarta Sans', sans-serif;
+  color: var(--ink3); background: transparent;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.vt-btn.active {
+  background: var(--surface); color: var(--brand-b);
+  box-shadow: 0 2px 8px rgba(123,47,247,0.12);
+  font-weight: 700;
+}
+
+/* ── WEEK VIEW — timeline agenda ── */
+.week-view { padding: 0; }
+
+.week-nav {
+  display: flex; align-items: center; gap: 10px;
+  padding: 0 22px; margin-bottom: 10px;
+}
+.wn-arrow {
+  width: 32px; height: 32px; border-radius: 10px;
+  border: 1.5px solid var(--border); background: var(--surface);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: var(--ink2); cursor: pointer;
+  transition: all 0.15s; flex-shrink: 0;
+}
+.wn-arrow:hover { border-color: var(--brand-b); color: var(--brand-b); background: var(--sport-l); }
+.wn-range { flex: 1; font-size: 13px; font-weight: 600; color: var(--ink); text-align: center; }
+
+/* Day strip header */
+.day-strip {
+  display: grid; grid-template-columns: 36px repeat(7, 1fr);
+  padding: 0 22px; gap: 3px; margin-bottom: 6px;
+}
+.day-strip-spacer { /* empty corner */ }
+.day-strip-col {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  cursor: pointer; padding: 4px 2px; border-radius: 10px;
+  transition: background 0.15s;
+}
+.day-strip-col:hover { background: var(--surface2); }
+.ds-name { font-size: 9px; font-weight: 700; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.05em; }
+.ds-num {
+  width: 28px; height: 28px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: var(--ink);
+  transition: all 0.2s cubic-bezier(.34,1.56,.64,1);
+}
+.day-strip-col.today .ds-num { background: var(--grad); color: #fff; box-shadow: 0 3px 10px rgba(123,47,247,0.4); }
+.day-strip-col.selected:not(.today) .ds-num { background: var(--sport-l); color: var(--brand-b); border: 1.5px solid var(--brand-b); }
+
+/* Timeline grid */
+.timeline-scroll {
+  overflow-x: auto; overflow-y: visible;
+  scrollbar-width: none; padding: 0 22px 10px;
+}
+.timeline-scroll::-webkit-scrollbar { display: none; }
+.timeline-grid {
+  display: grid;
+  grid-template-columns: 36px repeat(7, 1fr);
+  gap: 3px;
+  position: relative;
+}
+
+/* Hour labels */
+.tl-hour {
+  font-size: 9px; font-weight: 600; color: var(--ink4);
+  text-align: right; padding-right: 6px; padding-top: 2px;
+  height: 44px; display: flex; align-items: flex-start; justify-content: flex-end;
+}
+/* Cell slots */
+.tl-cell {
+  height: 44px; border-top: 1px solid var(--border);
+  position: relative; cursor: pointer;
+  transition: background 0.1s;
+}
+.tl-cell:hover { background: var(--green-xl); }
+.tl-cell:first-of-type { border-top: none; }
+
+/* Event vignettes */
+.ev-vignette {
+  position: absolute; left: 2px; right: 2px;
+  border-radius: 8px; padding: 4px 7px;
+  font-size: 10px; font-weight: 700; line-height: 1.3;
+  cursor: pointer; z-index: 2;
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  transition: all 0.15s; box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  border-left: 3px solid transparent;
+}
+.ev-vignette:hover { transform: scale(1.02); box-shadow: 0 4px 12px rgba(0,0,0,0.14); }
+.ev-vignette .ev-v-label { font-size: 9px; font-weight: 600; opacity: 0.75; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ev-sport   { background: var(--sport-l);  color: var(--brand-b); border-color: var(--brand-b); }
+.ev-busy    { background: var(--busy-l); color: var(--brand-c); border-color: var(--brand-c); }
+.ev-free    { background: var(--free-l); color: var(--brand-a); border-color: var(--brand-a); }
+.ev-sport-proposed { background: var(--sport-l); color: var(--brand-b); border-color: var(--brand-b); border-style: dashed; }
+
+/* Now indicator */
+.now-line {
+  position: absolute; left: 0; right: 0; height: 2px;
+  background: var(--brand-c); z-index: 5; pointer-events: none;
+}
+.now-line::before {
+  content: ''; position: absolute; left: -4px; top: -3px;
+  width: 8px; height: 8px; border-radius: 50%; background: var(--brand-c);
+}
+
+/* Add event btn */
+.add-event-btn {
+  width: calc(100% - 44px); margin: 6px 22px 0;
+  padding: 10px; border-radius: var(--r-sm);
+  border: 1.5px dashed var(--border); background: transparent;
+  font-size: 12px; font-weight: 600; color: var(--ink3);
+  cursor: pointer; transition: all 0.2s; font-family: 'Plus Jakarta Sans', sans-serif;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.add-event-btn:hover { border-color: var(--brand-b); color: var(--brand-b); background: var(--sport-l); }
+
+/* ── MONTH VIEW ── */
+.month-view { padding: 0 22px; display: none; }
+.month-view.visible { display: block; }
+.mv-nav { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.mv-name { flex: 1; font-size: 15px; font-weight: 700; color: var(--ink); text-align: center; }
+.mv-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; }
+.mv-dayname { text-align: center; font-size: 9px; font-weight: 700; color: var(--ink3); text-transform: uppercase; padding: 3px 0; letter-spacing: 0.05em; }
+.mv-cell {
+  aspect-ratio: 1; border-radius: 10px; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; transition: all 0.15s;
+  position: relative;
+}
+.mv-cell:hover { background: var(--surface2); }
+.mv-num { font-size: 12px; font-weight: 600; color: var(--ink); line-height: 1; }
+.mv-cell.other .mv-num { color: var(--ink4); }
+.mv-cell.today { background: var(--grad); }
+.mv-cell.today .mv-num { color: #fff; }
+.mv-cell.has-selected { background: var(--sport-l); }
+.mv-cell.has-selected .mv-num { color: var(--brand-b); font-weight: 800; }
+.mv-dots { display: flex; gap: 2px; }
+.mv-dot { width: 4px; height: 4px; border-radius: 50%; }
+.mv-grd { display:none; }
+
+/* ── Participants ── */
+.participants-section { padding: 0 22px 14px; }
+.parti-card { background: var(--surface); border-radius: var(--r); box-shadow: var(--sh); overflow: hidden; }
+.parti-header {
+  padding: 14px 16px;
+  background: var(--grad-soft);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.parti-title { font-size: 13px; font-weight: 700; color: var(--ink); }
+.parti-count { font-size: 11px; color: var(--ink3); background: var(--surface2); padding: 3px 8px; border-radius: 20px; font-weight: 600; }
+
+.person-row {
+  display: flex; align-items: center; gap: 11px;
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s; cursor: pointer;
+}
+.person-row:last-child { border-bottom: none; }
+.person-row:hover { background: var(--surface2); }
+.pers-av {
+  width: 38px; height: 38px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; flex-shrink: 0;
+  position: relative;
+}
+.pers-av-emoji {
+  width: 38px; height: 38px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.pers-info { flex: 1; }
+.pers-name { font-size: 13px; font-weight: 600; color: var(--ink); display: flex; align-items: center; gap: 6px; }
+.pers-role { font-size: 10px; color: var(--ink3); margin-top: 2px; }
+.pers-avail { display: flex; gap: 2px; }
+.pa-block { width: 7px; height: 18px; border-radius: 3px; }
+.pa-free { background: var(--sport-l); border: 1px solid rgba(123,47,247,0.2); }
+.pa-sport { background: var(--brand-b); }
+.pa-busy { background: var(--border); }
+
+/* ── Créneaux suggérés ── */
+.slots-section { padding: 0 22px 14px; }
+.slot-card {
+  background: var(--surface); border-radius: var(--r);
+  padding: 14px 16px; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 12px;
+  box-shadow: var(--sh); cursor: pointer;
+  transition: all 0.2s cubic-bezier(.4,0,.2,1);
+  border: 1.5px solid transparent; position: relative; overflow: hidden;
+}
+.slot-card::before { content:''; position:absolute; inset:0; opacity:0; transition:opacity 0.2s; }
+.slot-card:hover { transform: translateX(4px); box-shadow: var(--sh-md); }
+.slot-card.best { border-color: var(--brand-b); }
+.slot-card.best::before { background: var(--grad-soft); opacity: 1; }
+.slot-star { position: absolute; top: 8px; right: 10px; font-size: 9px; font-weight: 800; color: var(--brand-b); background: var(--sport-l); padding: 2px 7px; border-radius: 10px; letter-spacing: 0.05em; }
+.sl-time {
+  font-family: 'Fraunces', serif; font-weight: 500;
+  font-size: 24px; color: var(--ink); line-height: 1; min-width: 58px;
+}
+.sl-date { font-size: 10px; color: var(--ink3); margin-top: 1px; }
+.sl-info { flex: 1; }
+.sl-title { font-size: 13px; font-weight: 600; color: var(--ink); }
+.sl-meta { font-size: 11px; color: var(--ink3); margin-top: 2px; display: flex; align-items: center; gap: 6px; }
+.sl-avs { display: flex; }
+.sl-av { width: 22px; height: 22px; border-radius: 8px; font-size: 8px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-left: -5px; border: 2px solid var(--surface); }
+.sl-av:first-child { margin-left: 0; }
+
+/* Find btn */
+.find-wrap { padding: 0 22px 16px; }
+
+/* ═══════════════════════════════════
+   SCREEN 2 — SESSIONS
+═══════════════════════════════════ */
+.sess-header { padding: 16px 22px 6px; position: sticky; top:0; z-index:8; background:linear-gradient(var(--bg) 85%,transparent); }
+.sess-title { font-family:'Nunito',sans-serif; font-size:28px; color:var(--ink); font-weight:900; font-style:italic; }
+.sess-sub { font-size:12px; color:var(--ink3); margin-top:2px; }
+.sess-tabs { display:flex; padding:6px 22px 12px; gap:6px; }
+.s-tab {
+  padding:7px 16px; border-radius:20px; font-size:12px; font-weight:700;
+  cursor:pointer; transition:all 0.2s; color:var(--ink2); background:var(--surface);
+  border:1.5px solid var(--border); font-family:'Plus Jakarta Sans',sans-serif;
+}
+.s-tab.active { background: var(--grad); color:#fff; border-color:transparent; box-shadow:0 2px 10px rgba(123,47,247,0.3); }
+
+.scard {
+  margin:0 22px 12px; background:var(--surface);
+  border-radius:var(--r); box-shadow:var(--sh);
+  overflow:hidden; cursor:pointer; transition:all 0.2s;
+}
+.scard:hover { transform:translateY(-2px); box-shadow:var(--sh-md); }
+.scard-accent { height:4px; }
+.scard-body { padding:14px 16px; }
+.sc-type { font-family:'Fraunces',serif; font-size:19px; color:var(--ink); font-weight:500; margin-bottom:2px; }
+.sc-date { font-size:12px; color:var(--ink3); }
+.sc-partis { display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
+.sc-pchip {
+  display:flex; align-items:center; gap:5px;
+  background:var(--surface2); border-radius:20px;
+  padding:4px 10px; font-size:11px;
+}
+.sc-pchip-av { width:18px; height:18px; border-radius:6px; font-size:7px; font-weight:800; display:flex; align-items:center; justify-content:center; }
+.sc-pchip-name { font-weight:600; color:var(--ink); }
+.sc-pchip-role { color:var(--ink3); }
+.sc-confirm { display:flex; gap:8px; margin-top:12px; }
+.sc-yes { flex:2; padding:11px; border-radius:12px; background:var(--grad); color:#fff; border:none; font-size:13px; font-weight:800; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; transition:all 0.2s; box-shadow:0 3px 12px rgba(123,47,247,0.3); }
+.sc-yes:hover { opacity:0.9; transform:translateY(-1px); }
+.sc-other { flex:1; padding:11px; border-radius:12px; background:var(--surface2); color:var(--ink2); border:none; font-size:13px; font-weight:600; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; }
+.confirmed-badge { display:inline-flex; align-items:center; gap:5px; background:var(--sport-l); color:var(--brand-b); font-size:11px; font-weight:700; padding:5px 10px; border-radius:20px; margin-top:8px; }
+
+/* ═══════════════════════════════════
+   SCREEN 3 — PROGRESSION
+═══════════════════════════════════ */
+.prog-header { padding:16px 22px 10px; position:sticky;top:0;z-index:8; background:linear-gradient(var(--bg) 85%,transparent); }
+.prog-title { font-family:'Nunito',sans-serif; font-size:28px; color:var(--ink); font-weight:900; font-style:italic; }
+
+.prog-hero {
+  margin:0 22px 16px; border-radius:var(--r-lg); padding:24px;
+  background: var(--grad-hero);
+  position:relative; overflow:hidden;
+  box-shadow:0 8px 32px rgba(123,47,247,0.4);
+}
+.ph-orb1 { position:absolute; width:140px; height:140px; border-radius:50%; background:rgba(247,37,133,0.18); top:-40px; right:-30px; }
+.ph-orb2 { position:absolute; width:80px; height:80px; border-radius:50%; background:rgba(255,255,255,0.07); bottom:-20px; right:40px; }
+.ph-hello { font-size:11px; color:rgba(255,255,255,0.65); font-weight:700; text-transform:uppercase; letter-spacing:0.08em; }
+.ph-name { font-family:'Nunito',sans-serif; font-size:28px; color:#fff; font-weight:900; font-style:italic; margin:4px 0 18px; }
+.ph-stats { display:flex; gap:0; }
+.ph-stat { flex:1; }
+.ph-sep { width:1px; background:rgba(255,255,255,0.15); margin:0 2px; }
+.ph-num { font-family:'Nunito',sans-serif; font-size:32px; color:#fff; font-weight:900; line-height:1; }
+.ph-lbl { font-size:10px; color:rgba(255,255,255,0.6); margin-top:3px; font-weight:600; }
+
+.stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:0 22px 16px; }
+.sg-card { background:var(--surface); border-radius:var(--r); padding:16px; box-shadow:var(--sh); }
+.sg-icon { font-size:22px; margin-bottom:8px; }
+.sg-num { font-family:'Fraunces',serif; font-size:30px; color:var(--ink); font-weight:500; line-height:1; }
+.sg-lbl { font-size:11px; color:var(--ink3); margin-top:3px; }
+.sg-sub { font-size:10px; color:var(--brand-b); font-weight:700; margin-top:5px; }
+
+.streak-section { padding:0 22px 16px; }
+.streak-label { font-size:11px; font-weight:700; color:var(--ink3); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+.weeks { display:flex; gap:5px; }
+.wk { flex:1; }
+.wk-bar { border-radius:6px; height:36px; transition:all 0.3s; }
+.wk-bar.d { background: var(--grad); }
+.wk-bar.p { background: linear-gradient(135deg, #7B2FF7, #F72585); }
+.wk-bar.e { background:var(--border); }
+.wk-lbl { font-size:9px; color:var(--ink3); text-align:center; margin-top:4px; font-weight:600; }
+
+/* ═══════════════════════════════════
+   SCREEN 4 — ASTUCES
+═══════════════════════════════════ */
+.tips-header { padding:16px 22px 10px; }
+.tips-title { font-family:'Nunito',sans-serif; font-size:28px; color:var(--ink); font-weight:900; font-style:italic; }
+.tips-sub { font-size:12px; color:var(--ink3); margin-top:2px; }
+.tips-cats { display:flex; gap:7px; padding:0 22px 14px; overflow-x:auto; scrollbar-width:none; }
+.tips-cats::-webkit-scrollbar { display:none; }
+.tc { padding:7px 14px; border-radius:20px; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s; border:1.5px solid var(--border); color:var(--ink2); background:var(--surface); white-space:nowrap; font-family:'Plus Jakarta Sans',sans-serif; }
+.tc.active { background:var(--grad); color:#fff; border-color:transparent; box-shadow:0 2px 10px rgba(123,47,247,0.25); }
+
+.tip-feat {
+  margin:0 22px 12px; border-radius:var(--r); overflow:hidden;
+  background: var(--grad-hero);
+  box-shadow:var(--sh-md); cursor:pointer; transition:all 0.2s;
+}
+.tip-feat:hover { transform:translateY(-2px); box-shadow:var(--sh-lg); }
+.tf-body { padding:18px; }
+.tf-emoji { font-size:28px; margin-bottom:10px; }
+.tf-title { font-family:'Fraunces',serif; font-size:19px; color:#fff; font-weight:500; line-height:1.3; }
+.tf-excerpt { font-size:12px; color:rgba(255,255,255,0.65); margin-top:6px; line-height:1.6; }
+.tf-foot { padding:10px 18px; background:rgba(0,0,0,0.15); display:flex; justify-content:space-between; align-items:center; }
+.tf-time { font-size:11px; color:rgba(255,255,255,0.5); }
+.tf-arr { font-size:14px; color:rgba(255,255,255,0.5); }
+
+.tip-reg {
+  margin:0 22px 10px; border-radius:var(--r);
+  background:var(--surface); box-shadow:var(--sh);
+  overflow:hidden; cursor:pointer; transition:all 0.2s;
+}
+.tip-reg:hover { transform:translateY(-2px); box-shadow:var(--sh-md); }
+.tr-body { padding:14px 16px; display:flex; gap:12px; align-items:flex-start; }
+.tr-emoji { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+.tr-title { font-size:14px; font-weight:600; color:var(--ink); line-height:1.35; }
+.tr-excerpt { font-size:11px; color:var(--ink2); margin-top:4px; line-height:1.5; }
+.tr-foot { padding:9px 16px; border-top:1px solid var(--border); display:flex; justify-content:space-between; }
+.tr-time { font-size:10px; color:var(--ink3); }
+.tr-arr { font-size:12px; color:var(--ink3); }
+
+/* ═══════════════════════════════════
+   MODALS
+═══════════════════════════════════ */
+.overlay {
+  position:absolute; inset:0;
+  background:rgba(24,21,15,0.55);
+  backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+  z-index:50;
+  display:flex; align-items:flex-end;
+  opacity:0; pointer-events:none;
+  transition:opacity 0.3s ease;
+}
+.overlay.open { opacity:1; pointer-events:all; }
+.sheet {
+  background:var(--bg); width:100%;
+  border-radius:28px 28px 0 0;
+  padding:12px 22px 36px;
+  transform:translateY(100%);
+  transition:transform 0.38s cubic-bezier(0.32,0.72,0,1);
+  max-height:90%;
+  overflow-y:auto; scrollbar-width:none;
+}
+.sheet::-webkit-scrollbar { display:none; }
+.overlay.open .sheet { transform:translateY(0); }
+.sh-handle { width:38px; height:4px; background:var(--border); border-radius:2px; margin:0 auto 20px; }
+.sh-title { font-family:'Nunito',sans-serif; font-size:22px; color:var(--ink); font-weight:900; font-style:italic; margin-bottom:3px; }
+.sh-sub { font-size:13px; color:var(--ink3); margin-bottom:18px; }
+
+.sug-card {
+  background:var(--surface); border-radius:var(--r-sm);
+  padding:14px; margin-bottom:9px;
+  border:1.5px solid var(--border);
+  cursor:pointer; transition:all 0.2s;
+  display:flex; align-items:center; gap:12px;
+}
+.sug-card:hover, .sug-card.sel { border-color:var(--brand-b); background:var(--sport-l); }
+.sug-radio { width:20px; height:20px; border-radius:50%; border:2px solid var(--border); flex-shrink:0; transition:all 0.2s; display:flex; align-items:center; justify-content:center; }
+.sug-card.sel .sug-radio { border-color:var(--brand-b); background:var(--brand-b); }
+.sug-radio::after { content:''; width:7px; height:7px; border-radius:50%; background:#fff; opacity:0; transition:opacity 0.2s; }
+.sug-card.sel .sug-radio::after { opacity:1; }
+.sug-t { font-family:'Nunito',sans-serif; font-size:20px; color:var(--ink); font-weight:900; }
+.sug-d { font-size:10px; color:var(--ink3); }
+.sug-i { flex:1; }
+.sug-l { font-size:13px; font-weight:700; color:var(--ink); }
+.sug-m { font-size:11px; color:var(--ink3); margin-top:2px; }
+.sug-s { font-size:12px; font-weight:800; color:var(--brand-b); }
+.sh-btns { display:flex; gap:10px; margin-top:16px; }
+
+/* ═══════════════════════════════════
+   NOTIFICATION PANEL
+═══════════════════════════════════ */
+.notif-panel {
+  position:absolute; inset:0;
+  background:var(--bg);
+  z-index:40;
+  transform:translateX(100%);
+  transition:transform 0.38s cubic-bezier(0.32,0.72,0,1);
+  overflow-y:auto; scrollbar-width:none;
+}
+.notif-panel::-webkit-scrollbar { display:none; }
+.notif-panel.open { transform:translateX(0); }
+
+.np-header {
+  padding:18px 22px 14px;
+  display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:5;
+  background:linear-gradient(var(--bg) 88%, transparent);
+}
+.np-title { font-family:'Nunito',sans-serif; font-size:24px; color:var(--ink); font-weight:900; font-style:italic; }
+.np-close {
+  width:36px; height:36px; border-radius:50%;
+  background:var(--surface2); border:none;
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px; cursor:pointer; color:var(--ink2);
+  transition:all 0.2s;
+}
+.np-close:hover { background:var(--border); }
+.np-badge-row { display:flex; gap:8px; padding:0 22px 16px; }
+.np-badge {
+  padding:5px 12px; border-radius:20px;
+  font-size:11px; font-weight:700; cursor:pointer;
+  transition:all 0.2s; border:1.5px solid transparent;
+}
+.np-badge.all { background:var(--grad); color:#fff; }
+.np-badge.unread { background:var(--sport-l); color:var(--brand-b); border-color:var(--sport-l); }
+.np-badge.read { background:var(--surface2); color:var(--ink3); }
+
+.notif-group-label {
+  font-size:10px; font-weight:800; color:var(--ink3);
+  text-transform:uppercase; letter-spacing:0.1em;
+  padding:0 22px; margin-bottom:8px;
+}
+
+.ncard {
+  margin:0 22px 8px;
+  background:var(--surface);
+  border-radius:var(--r);
+  padding:14px 16px;
+  display:flex; gap:12px; align-items:flex-start;
+  box-shadow:var(--sh);
+  cursor:pointer; transition:all 0.2s;
+  position:relative; overflow:hidden;
+  border:1.5px solid transparent;
+}
+.ncard:hover { transform:translateX(3px); box-shadow:var(--sh-md); }
+.ncard.unread { border-color:var(--border); }
+.ncard.unread::before {
+  content:''; position:absolute; left:0; top:0; bottom:0;
+  width:3px; border-radius:3px 0 0 3px;
+}
+.ncard.streak::before { background:var(--brand-c); }
+.ncard.slot::before   { background:var(--brand-b); }
+.ncard.confirm::before { background:var(--brand-a); }
+.ncard.badge::before  { background:var(--brand-c); }
+.ncard.social::before { background:var(--brand-a); }
+
+.ni-icon {
+  width:42px; height:42px; border-radius:14px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px; flex-shrink:0;
+}
+.ni-streak { background:linear-gradient(135deg,#FFE4F2,#FFB3D9); }
+.ni-slot   { background:var(--sport-l); }
+.ni-confirm { background:var(--free-l); }
+.ni-badge  { background:linear-gradient(135deg, var(--sport-l), var(--busy-l)); }
+.ni-social { background:var(--free-l); }
+.ni-tip    { background:var(--surface2); }
+
+.ni-body { flex:1; }
+.ni-title { font-size:13px; font-weight:700; color:var(--ink); line-height:1.35; }
+.ni-sub   { font-size:11px; color:var(--ink3); margin-top:3px; line-height:1.45; }
+.ni-time  { font-size:10px; color:var(--ink4); margin-top:5px; font-weight:500; }
+.ni-dot   { width:8px; height:8px; border-radius:50%; background:var(--brand-b); flex-shrink:0; margin-top:5px; }
+.ncard.read .ni-dot { background:transparent; }
+.ncard.read .ni-title { font-weight:600; color:var(--ink2); }
+
+/* ── Notif tab switcher ── */
+.np-tab {
+  flex:1; padding:9px 10px; border-radius:12px;
+  font-size:12px; font-weight:700; cursor:pointer;
+  border:none; font-family:'Plus Jakarta Sans',sans-serif;
+  color:var(--ink3); background:var(--surface2);
+  transition:all 0.22s cubic-bezier(.4,0,.2,1);
+}
+.np-tab.active {
+  background:var(--grad); color:#fff;
+  box-shadow:0 3px 12px rgba(123,47,247,0.3);
+}
+
+/* ── Filter chips ── */
+.np-filters {
+  display:flex; gap:6px; padding:0 22px 14px;
+  overflow-x:auto; scrollbar-width:none;
+}
+.np-filters::-webkit-scrollbar { display:none; }
+.npf {
+  white-space:nowrap; padding:6px 13px;
+  border-radius:20px; font-size:11px; font-weight:700;
+  background:var(--surface2); color:var(--ink3);
+  cursor:pointer; border:1.5px solid transparent;
+  transition:all 0.18s; flex-shrink:0;
+}
+.npf.active {
+  background:var(--sport-l); color:var(--brand-b);
+  border-color:var(--brand-b);
+}
+
+/* ── hidden notif card ── */
+.ncard.np-hidden { display:none; }
+
+/* ── Prefs ── */
+.pref-card {
+  background:var(--surface); border-radius:var(--r);
+  box-shadow:var(--sh); overflow:hidden;
+}
+.pref-row {
+  display:flex; align-items:center; gap:14px;
+  padding:14px 16px;
+  border-bottom:1px solid var(--border);
+  transition:background 0.15s;
+}
+.pref-row:active { background:var(--surface2); }
+.pref-icon {
+  width:38px; height:38px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px; flex-shrink:0;
+}
+.pref-info { flex:1; }
+.pref-label { font-size:13px; font-weight:700; color:var(--ink); }
+.pref-desc  { font-size:11px; color:var(--ink3); margin-top:2px; }
+
+/* Toggle switch */
+.pref-toggle {
+  width:46px; height:26px; border-radius:13px;
+  background:var(--border); cursor:pointer; flex-shrink:0;
+  position:relative; transition:background 0.25s;
+}
+.pref-toggle.on { background:var(--grad); }
+.pref-knob {
+  position:absolute; top:3px; left:3px;
+  width:20px; height:20px; border-radius:50%;
+  background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.2);
+  transition:left 0.25s cubic-bezier(.4,0,.2,1);
+}
+.pref-toggle.on .pref-knob { left:23px; }
+.pref-row.disabled { opacity:0.4; }
+
+/* ── np-badge-row hidden (replaced) ── */
+.np-badge-row { display:none; }
+
+/* notif bell btn */
+.bell-btn {
+  width:36px; height:36px; border-radius:50%;
+  background:var(--surface); border:1.5px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px; cursor:pointer; transition:all 0.2s;
+  position:relative;
+}
+.bell-btn:hover { background:var(--sport-l); border-color:var(--brand-b); }
+.bell-notif-dot {
+  position:absolute; top:2px; right:2px;
+  width:10px; height:10px; border-radius:50%;
+  background:var(--brand-c); border:2px solid var(--bg);
+  font-size:6px; color:#fff; font-weight:800;
+  display:flex; align-items:center; justify-content:center;
+}
+
+/* Confirm modal */
+.confirm-modal { text-align:center; }
+.cm-icon { font-size:60px; margin:12px 0 6px; display:block; }
+.cm-title { font-family:'Fraunces',serif; font-size:24px; color:var(--ink); font-weight:500; margin-bottom:6px; }
+.cm-sub { font-size:14px; color:var(--ink2); line-height:1.6; margin-bottom:20px; }
+.cm-box { background:var(--surface2); border-radius:var(--r-sm); padding:16px; text-align:left; margin-bottom:22px; }
+.cm-box-lbl { font-size:10px; color:var(--ink3); font-weight:700; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px; }
+.cm-box-title { font-size:17px; font-weight:700; color:var(--ink); }
+.cm-box-sub { font-size:13px; color:var(--ink2); margin-top:3px; }
+
+/* ── Partner calendar panel ── */
+.partner-panel {
+  position:absolute; inset:0;
+  background:var(--bg);
+  z-index:40;
+  transform:translateX(100%);
+  transition:transform 0.38s cubic-bezier(0.32,0.72,0,1);
+  overflow-y:auto; scrollbar-width:none;
+}
+.partner-panel::-webkit-scrollbar { display:none; }
+.partner-panel.open { transform:translateX(0); }
+
+.pp-header {
+  padding:18px 22px 12px;
+  display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:5;
+  background:linear-gradient(var(--bg) 88%, transparent);
+}
+.pp-title-wrap { display:flex; align-items:center; gap:10px; }
+.pp-av {
+  width:40px; height:40px; border-radius:14px;
+  background:var(--amber-l); color:var(--amber);
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:800;
+}
+.pp-name { font-family:'Nunito',sans-serif; font-size:20px; font-weight:900; color:var(--ink); }
+.pp-sub  { font-size:11px; color:var(--ink3); margin-top:1px; }
+.pp-close {
+  width:36px; height:36px; border-radius:50%;
+  background:var(--surface2); border:none;
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px; cursor:pointer; color:var(--ink2); transition:all 0.2s;
+}
+.pp-close:hover { background:var(--border); }
+
+.pp-week-nav {
+  display:flex; align-items:center; gap:10px;
+  padding:0 22px; margin-bottom:10px;
+}
+.pp-week-label { flex:1; font-size:13px; font-weight:700; color:var(--ink); text-align:center; }
+
+/* Partner day strip */
+.pp-day-strip {
+  display:grid; grid-template-columns:36px repeat(7,1fr);
+  padding:0 22px; gap:3px; margin-bottom:6px;
+}
+.pp-day-col {
+  display:flex; flex-direction:column; align-items:center; gap:3px;
+  padding:4px 2px; border-radius:10px;
+}
+.pp-ds-name { font-size:9px; font-weight:700; color:var(--ink3); text-transform:uppercase; }
+.pp-ds-num {
+  width:28px; height:28px; border-radius:9px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:700; color:var(--ink);
+}
+.pp-day-col.busy-day .pp-ds-num { background:var(--busy-l); color:var(--brand-c); }
+.pp-day-col.free-day .pp-ds-num { background:var(--sport-l); color:var(--brand-b); }
+.pp-day-col.sport-day .pp-ds-num { background:var(--grad); color:#fff; }
+
+/* Partner timeline */
+.pp-timeline-scroll { overflow-x:auto; overflow-y:visible; scrollbar-width:none; padding:0 22px 10px; }
+.pp-timeline-scroll::-webkit-scrollbar { display:none; }
+.pp-timeline-grid {
+  display:grid; grid-template-columns:36px repeat(7,1fr);
+  gap:3px; position:relative;
+}
+.pp-tl-hour {
+  font-size:9px; font-weight:600; color:var(--ink4);
+  text-align:right; padding-right:6px; padding-top:2px;
+  height:44px; display:flex; align-items:flex-start; justify-content:flex-end;
+}
+.pp-tl-cell {
+  height:44px; border-top:1px solid var(--border);
+  position:relative;
+}
+
+/* Overlap indicator */
+.overlap-bar {
+  position:absolute; left:0; right:0; top:0; bottom:0;
+  background:rgba(59,91,219,0.06);
+  border-left:3px solid var(--brand-a);
+  z-index:1; pointer-events:none;
+}
+.overlap-label {
+  position:absolute; top:2px; left:6px;
+  font-size:8px; font-weight:800; color:var(--brand-b);
+  letter-spacing:0.03em; z-index:3;
+}
+
+/* ── Progression toggle ── */
+.prog-toggle {
+  display:flex; align-items:center;
+  background:var(--surface2); border-radius:14px;
+  padding:4px; margin:0 22px 16px; gap:2px;
+}
+.pt-btn {
+  flex:1; padding:8px 12px; border-radius:10px;
+  font-size:12px; font-weight:700; cursor:pointer;
+  transition:all 0.2s cubic-bezier(.4,0,.2,1);
+  border:none; font-family:'Plus Jakarta Sans',sans-serif;
+  color:var(--ink3); background:transparent;
+  display:flex; align-items:center; justify-content:center; gap:6px;
+}
+.pt-btn.active {
+  background:var(--grad); color:#fff;
+  box-shadow:0 2px 10px rgba(123,47,247,0.3);
+}
+
+/* Moi section */
+.moi-section { padding:0 22px 16px; }
+.moi-photo {
+  width:72px; height:72px; border-radius:22px;
+  background:var(--grad); display:flex; align-items:center; justify-content:center;
+  font-size:28px; font-weight:900; color:#fff; font-family:'Nunito',sans-serif;
+  font-style:italic; box-shadow:0 6px 20px rgba(123,47,247,0.4);
+  flex-shrink:0;
+}
+.moi-card {
+  background:var(--surface); border-radius:var(--r);
+  padding:18px; box-shadow:var(--sh);
+  display:flex; gap:16px; align-items:center; margin-bottom:12px;
+}
+.moi-info { flex:1; }
+.moi-name { font-family:'Nunito',sans-serif; font-size:20px; font-weight:900; font-style:italic; color:var(--ink); }
+.moi-level { font-size:11px; color:var(--brand-b); font-weight:700; margin-top:2px; }
+.moi-badges { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+.moi-badge {
+  display:inline-flex; align-items:center; gap:4px;
+  padding:4px 10px; border-radius:20px;
+  font-size:10px; font-weight:700;
+}
+.moi-badge-g { background:var(--sport-l); color:var(--brand-b); }
+.moi-badge-p { background:var(--busy-l); color:var(--brand-c); }
+.moi-badge-a { background:var(--amber-l); color:var(--amber); }
+
+.moi-goals { background:var(--surface); border-radius:var(--r); padding:16px; box-shadow:var(--sh); margin-bottom:12px; }
+.moi-goals-title { font-size:11px; font-weight:800; color:var(--ink3); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:12px; }
+.goal-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.goal-row:last-child { margin-bottom:0; }
+.goal-emoji { font-size:18px; width:32px; text-align:center; }
+.goal-info { flex:1; }
+.goal-label { font-size:12px; font-weight:700; color:var(--ink); }
+.goal-bar-wrap { height:6px; background:var(--border); border-radius:3px; margin-top:4px; overflow:hidden; }
+.goal-bar { height:100%; border-radius:3px; background:var(--grad); transition:width 0.6s cubic-bezier(.4,0,.2,1); }
+.goal-pct { font-size:11px; font-weight:800; color:var(--brand-b); min-width:32px; text-align:right; }
+
+.moi-sports { background:var(--surface); border-radius:var(--r); padding:16px; box-shadow:var(--sh); }
+.sport-row { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border); }
+.sport-row:last-child { border-bottom:none; }
+.sport-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.sport-name { flex:1; font-size:13px; font-weight:600; color:var(--ink); }
+.sport-count { font-size:12px; font-weight:800; color:var(--brand-b); }
+.sport-bar-mini { width:60px; height:4px; background:var(--border); border-radius:2px; overflow:hidden; }
+.sport-bar-fill { height:100%; border-radius:2px; }
+@keyframes popIn { 0%{transform:scale(0.85);opacity:0} 70%{transform:scale(1.04)} 100%{transform:scale(1);opacity:1} }
+.au { animation:fadeUp 0.4s ease both; }
+.d1 { animation-delay:0.05s; }
+.d2 { animation-delay:0.10s; }
+.d3 { animation-delay:0.15s; }
+.d4 { animation-delay:0.20s; }
+.pi { animation:popIn 0.35s cubic-bezier(.34,1.56,.64,1) both; }
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="island"></div>
+
+  <div class="status-bar">
+    <span class="st-time">9:41</span>
+    <div class="st-icons">
+      <svg viewBox="0 0 24 24"><path d="M1 6l11 12L23 6"/></svg>
+      <svg viewBox="0 0 24 24"><rect x="2" y="8" width="4" height="14"/><rect x="9" y="4" width="4" height="18"/><rect x="16" y="0" width="4" height="22"/></svg>
+      <div class="battery"><div class="battery-fill"></div></div>
+    </div>
+  </div>
+
+  <div class="screens">
+
+    <!-- ══════════ AGENDA ══════════ -->
+    <div class="screen active" id="screen-agenda">
+
+      <!-- Header -->
+      <div class="agenda-header">
+        <div class="ah-left">
+          <div class="hello">Bonjour 👋</div>
+          <div class="title" style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Beaty</div>
+        </div>
+        <div class="ah-right">
+          <button class="bell-btn" onclick="openNotifs()">
+            🔔
+            <div class="bell-notif-dot" id="bell-dot">3</div>
+          </button>
+          <button class="av-btn av-me" onclick="openPartnerCal()" style="background:var(--amber-l);color:var(--amber);border:2px solid var(--amber);font-size:10px;" title="Voir agenda Thomas">TH</button>
+          <button class="av-btn av-me">SA</button>
+        </div>
+      </div>
+
+      <!-- Toggle semaine / mois -->
+      <div class="view-toggle">
+        <button class="vt-btn active" id="btn-week" onclick="setView('week')">📅 Semaine</button>
+        <button class="vt-btn" id="btn-month" onclick="setView('month')">🔍 Vue mois</button>
+      </div>
+
+      <!-- WEEK VIEW -->
+      <div class="week-view" id="view-week">
+        <div class="week-nav">
+          <button class="wn-arrow" onclick="moveWeek(-1)">‹</button>
+          <div class="wn-range" id="week-range">3 – 9 mars 2026</div>
+          <button class="wn-arrow" onclick="moveWeek(1)">›</button>
+        </div>
+        <!-- Day header strip -->
+        <div class="day-strip" id="day-strip"></div>
+        <!-- Timeline -->
+        <div class="timeline-scroll">
+          <div class="timeline-grid" id="timeline-grid"></div>
+        </div>
+        <button class="add-event-btn" onclick="alert('Ajouter un événement…')">＋ Ajouter un événement</button>
+      </div>
+
+      <!-- MONTH VIEW -->
+      <div class="month-view" id="view-month">
+        <div class="mv-nav">
+          <button class="wn-arrow">‹</button>
+          <div class="mv-name">Mars 2026</div>
+          <button class="wn-arrow">›</button>
+        </div>
+        <div class="mv-grid" id="mv-grid"></div>
+        <div style="height:14px;"></div>
+      </div>
+
+      <!-- Participants -->
+      <div class="participants-section au d1">
+        <div class="section-head">Groupe · 2 membres</div>
+        <div class="parti-card">
+          <div class="parti-header">
+            <div class="parti-title">Disponibilités semaine</div>
+            <div class="parti-count" id="free-count">2 libres jeudi</div>
+          </div>
+
+          <div class="person-row">
+            <div class="pers-av" style="background:var(--sport-l);color:var(--brand-b);">SA</div>
+            <div class="pers-info">
+              <div class="pers-name">Sarah <span class="tag tag-g" style="font-size:9px;">Parent</span></div>
+              <div class="pers-role">Moi · Libre mar & jeu matin</div>
+            </div>
+            <div class="pers-avail">
+              <div class="pa-block pa-free"></div>
+              <div class="pa-block pa-busy"></div>
+              <div class="pa-block pa-sport"></div>
+              <div class="pa-block pa-free"></div>
+              <div class="pa-block pa-free"></div>
+            </div>
+          </div>
+
+          <div class="person-row" style="border-bottom:none;">
+            <div class="pers-av" style="background:var(--amber-l);color:var(--amber);">TH</div>
+            <div class="pers-info">
+              <div class="pers-name">Thomas <span class="tag tag-a" style="font-size:9px;">Parent</span></div>
+              <div class="pers-role">Congés 14–18 mars ✈️</div>
+            </div>
+            <div class="pers-avail">
+              <div class="pa-block pa-busy"></div>
+              <div class="pa-block pa-free"></div>
+              <div class="pa-block pa-free"></div>
+              <div class="pa-block pa-busy"></div>
+              <div class="pa-block pa-free"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Find CTA -->
+      <div class="find-wrap au d2">
+        <button class="btn-p" onclick="openFindModal()">
+          <span>⚡</span> Trouver un créneau commun
+        </button>
+      </div>
+
+      <!-- Créneaux suggérés -->
+      <div class="slots-section au d3">
+        <div class="section-head">Créneaux optimaux cette semaine</div>
+
+        <div class="slot-card best" onclick="openFindModal()">
+          <div class="slot-star">⭐ MEILLEUR</div>
+          <div>
+            <div class="sl-time">7h00</div>
+            <div class="sl-date">Jeu 12 mars</div>
+          </div>
+          <div class="sl-info">
+            <div class="sl-title">🏃 Course à pied</div>
+            <div class="sl-meta">
+              <span>45 min</span>·
+              <div class="sl-avs">
+                <div class="sl-av" style="background:var(--sport-l);color:var(--brand-b);">SA</div>
+                <div class="sl-av" style="background:var(--amber-l);color:var(--amber);">TH</div>
+              </div>
+              <span>2/2 ✓</span>
+            </div>
+          </div>
+          <span class="tag tag-g">Libre ✓</span>
+        </div>
+
+        <div class="slot-card">
+          <div>
+            <div class="sl-time">18h00</div>
+            <div class="sl-date">Mar 10 mars</div>
+          </div>
+          <div class="sl-info">
+            <div class="sl-title">⚡ HIIT express</div>
+            <div class="sl-meta">
+              <span>30 min</span>·
+              <div class="sl-avs">
+                <div class="sl-av" style="background:var(--sport-l);color:var(--brand-b);">SA</div>
+                <div class="sl-av" style="background:var(--amber-l);color:var(--amber);">TH</div>
+              </div>
+              <span>2/2 ✓</span>
+            </div>
+          </div>
+          <span class="tag tag-g">Libre ✓</span>
+        </div>
+
+        <div class="slot-card">
+          <div>
+            <div class="sl-time">8h00</div>
+            <div class="sl-date">Sam 15 mars</div>
+          </div>
+          <div class="sl-info">
+            <div class="sl-title">🧘 Yoga matinal</div>
+            <div class="sl-meta">
+              <span>30 min</span>·
+              <div class="sl-avs">
+                <div class="sl-av" style="background:var(--sport-l);color:var(--brand-b);">SA</div>
+              </div>
+              <span>1/2</span>
+            </div>
+          </div>
+          <span class="tag tag-n">1/2</span>
+        </div>
+      </div>
+
+      <div style="height:24px;"></div>
+    </div>
+
+    <!-- ══════════ SESSIONS ══════════ -->
+    <div class="screen" id="screen-sessions">
+      <div class="sess-header">
+        <div class="sess-title">Sessions</div>
+        <div class="sess-sub">2 séances ce mois 💪</div>
+      </div>
+      <div class="sess-tabs">
+        <button class="s-tab active" onclick="switchSessTab(this,'up')">À venir</button>
+        <button class="s-tab" onclick="switchSessTab(this,'past')">Passées</button>
+      </div>
+
+      <div id="sess-up">
+        <div class="scard au d1">
+          <div class="scard-accent" style="background:var(--amber);"></div>
+          <div class="scard-body">
+            <div style="margin-bottom:6px;"><span class="tag tag-a">En attente</span></div>
+            <div class="sc-type">🏃 Course à pied</div>
+            <div class="sc-date">Jeudi 12 mars · 7h00 – 7h45</div>
+            <div class="sc-partis">
+              <div class="sc-pchip">
+                <div class="sc-pchip-av" style="background:var(--sport-l);color:var(--brand-b);">SA</div>
+                <span class="sc-pchip-name">Sarah</span>
+                <span class="sc-pchip-role">· Moi</span>
+              </div>
+              <div class="sc-pchip">
+                <div class="sc-pchip-av" style="background:var(--amber-l);color:var(--amber);">TH</div>
+                <span class="sc-pchip-name">Thomas</span>
+                <span class="sc-pchip-role">· Partenaire</span>
+              </div>
+            </div>
+            <div style="font-size:11px;color:var(--ink3);margin-top:8px;">Thomas attend ta confirmation 👀</div>
+            <div class="sc-confirm">
+              <button class="sc-yes" onclick="confirmSess(this)">✓ Je confirme</button>
+              <button class="sc-other">Autre créneau</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="scard au d2">
+          <div class="scard-accent" style="background:var(--grad);"></div>
+          <div class="scard-body">
+            <div style="margin-bottom:6px;"><span class="tag tag-g">Confirmée ✓</span></div>
+            <div class="sc-type">🧘 Yoga matinal</div>
+            <div class="sc-date">Samedi 15 mars · 8h00 – 8h30</div>
+            <div class="sc-partis">
+              <div class="sc-pchip">
+                <div class="sc-pchip-av" style="background:var(--sport-l);color:var(--brand-b);">SA</div>
+                <span class="sc-pchip-name">Sarah</span>
+                <span class="sc-pchip-role">· Moi</span>
+              </div>
+              <div class="sc-pchip">
+                <div class="sc-pchip-av" style="background:var(--amber-l);color:var(--amber);">TH</div>
+                <span class="sc-pchip-name">Thomas</span>
+                <span class="sc-pchip-role">· Partenaire</span>
+              </div>
+            </div>
+            <div class="confirmed-badge">✓ 2/2 confirmés · C'est parti ! 🎉</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sess-past" style="display:none;">
+        <div class="scard au d1">
+          <div class="scard-accent" style="background:var(--brand-b);"></div>
+          <div class="scard-body">
+            <div style="margin-bottom:6px;"><span class="tag tag-n">Réalisée</span></div>
+            <div class="sc-type">⚡ HIIT express</div>
+            <div class="sc-date">Mardi 3 mars · 7h00 – 7h30</div>
+            <div class="sc-partis">
+              <div class="sc-pchip"><div class="sc-pchip-av" style="background:var(--sport-l);color:var(--brand-b);">SA</div><span class="sc-pchip-name">Sarah</span></div>
+              <div class="sc-pchip"><div class="sc-pchip-av" style="background:var(--amber-l);color:var(--amber);">TH</div><span class="sc-pchip-name">Thomas</span></div>
+            </div>
+            <div class="confirmed-badge" style="background:var(--sport-l);color:var(--brand-b);">✓ Complétée · 2/2 · 30 min</div>
+          </div>
+        </div>
+        <div class="scard au d2">
+          <div class="scard-accent" style="background:var(--brand-c);"></div>
+          <div class="scard-body">
+            <div style="margin-bottom:6px;"><span class="tag tag-n">Réalisée</span></div>
+            <div class="sc-type">🚴 Vélo en salle</div>
+            <div class="sc-date">Jeudi 27 fév · 18h00 – 18h45</div>
+            <div class="sc-partis">
+              <div class="sc-pchip"><div class="sc-pchip-av" style="background:var(--sport-l);color:var(--brand-b);">SA</div><span class="sc-pchip-name">Sarah</span></div>
+              <div class="sc-pchip"><div class="sc-pchip-av" style="background:var(--amber-l);color:var(--amber);">TH</div><span class="sc-pchip-name">Thomas</span></div>
+            </div>
+            <div class="confirmed-badge" style="background:var(--sport-l);color:var(--brand-b);">✓ Complétée · 2/2 · 45 min</div>
+          </div>
+        </div>
+      </div>
+      <div style="height:24px;"></div>
+    </div>
+
+    <!-- ══════════ PROGRESSION ══════════ -->
+    <div class="screen" id="screen-progression">
+      <div class="prog-header"><div class="prog-title">Progression</div></div>
+
+      <!-- Toggle Moi / Thomas -->
+      <div class="prog-toggle">
+        <button class="pt-btn active" id="pt-moi" onclick="switchProg('moi')">👤 Moi</button>
+        <button class="pt-btn" id="pt-thomas" onclick="switchProg('thomas')">👤 Thomas</button>
+      </div>
+
+      <!-- ── VUE MOI ── -->
+      <div id="prog-moi">
+
+        <!-- Carte profil -->
+        <div class="moi-section">
+          <div class="moi-card au">
+            <div class="moi-photo">SA</div>
+            <div class="moi-info">
+              <div class="moi-name">Sarah A.</div>
+              <div class="moi-level">🏅 Niveau Confirmé · depuis 3 mois</div>
+              <div class="moi-badges">
+                <div class="moi-badge moi-badge-g">🔥 Streak 8 sem.</div>
+                <div class="moi-badge moi-badge-p">💪 Inséparables</div>
+                <div class="moi-badge moi-badge-a">⚡ HIIT addict</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Objectifs -->
+          <div class="moi-goals au d1">
+            <div class="moi-goals-title">Objectifs du mois</div>
+            <div class="goal-row">
+              <div class="goal-emoji">🎯</div>
+              <div class="goal-info">
+                <div class="goal-label">4 séances / semaine</div>
+                <div class="goal-bar-wrap"><div class="goal-bar" style="width:75%"></div></div>
+              </div>
+              <div class="goal-pct">75%</div>
+            </div>
+            <div class="goal-row">
+              <div class="goal-emoji">⏱️</div>
+              <div class="goal-info">
+                <div class="goal-label">5h d'activité / mois</div>
+                <div class="goal-bar-wrap"><div class="goal-bar" style="width:100%"></div></div>
+              </div>
+              <div class="goal-pct" style="color:var(--brand-c);">✓</div>
+            </div>
+            <div class="goal-row">
+              <div class="goal-emoji">👥</div>
+              <div class="goal-info">
+                <div class="goal-label">Toutes les séances en duo</div>
+                <div class="goal-bar-wrap"><div class="goal-bar" style="width:100%"></div></div>
+              </div>
+              <div class="goal-pct" style="color:var(--brand-c);">✓</div>
+            </div>
+          </div>
+
+          <!-- Activités pratiquées -->
+          <div class="moi-sports au d2">
+            <div class="moi-goals-title">Mes sports ce mois</div>
+            <div class="sport-row">
+              <div class="sport-dot" style="background:var(--brand-b);"></div>
+              <div class="sport-name">🏃 Course à pied</div>
+              <div class="sport-bar-mini"><div class="sport-bar-fill" style="width:80%;background:var(--brand-b);"></div></div>
+              <div class="sport-count">5×</div>
+            </div>
+            <div class="sport-row">
+              <div class="sport-dot" style="background:var(--brand-c);"></div>
+              <div class="sport-name">⚡ HIIT</div>
+              <div class="sport-bar-mini"><div class="sport-bar-fill" style="width:50%;background:var(--brand-c);"></div></div>
+              <div class="sport-count">3×</div>
+            </div>
+            <div class="sport-row">
+              <div class="sport-dot" style="background:var(--amber);"></div>
+              <div class="sport-name">🧘 Yoga</div>
+              <div class="sport-bar-mini"><div class="sport-bar-fill" style="width:35%;background:var(--amber);"></div></div>
+              <div class="sport-count">2×</div>
+            </div>
+            <div class="sport-row">
+              <div class="sport-dot" style="background:var(--brand-a);"></div>
+              <div class="sport-name">🚴 Vélo</div>
+              <div class="sport-bar-mini"><div class="sport-bar-fill" style="width:20%;background:var(--brand-a);"></div></div>
+              <div class="sport-count">1×</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── VUE THOMAS ── -->
+      <div id="prog-thomas" style="display:none;">
+        <div class="prog-hero au">
+          <div class="ph-orb1"></div><div class="ph-orb2"></div>
+          <div class="ph-hello">Niveau · Intermédiaire 💪</div>
+          <div class="ph-name">Thomas B.</div>
+          <div class="ph-stats">
+            <div class="ph-stat"><div class="ph-num">10</div><div class="ph-lbl">séances</div></div>
+            <div class="ph-sep"></div>
+            <div class="ph-stat"><div class="ph-num">3🔥</div><div class="ph-lbl">semaines</div></div>
+            <div class="ph-sep"></div>
+            <div class="ph-stat"><div class="ph-num">4h</div><div class="ph-lbl">ce mois</div></div>
+          </div>
+        </div>
+
+        <div class="stats-grid au d1">
+          <div class="sg-card"><div class="sg-icon">🎯</div><div class="sg-num">2/4</div><div class="sg-lbl">Objectif semaine</div><div class="sg-sub">50% atteint</div></div>
+          <div class="sg-card"><div class="sg-icon">⏱️</div><div class="sg-num">28'</div><div class="sg-lbl">Durée moyenne</div><div class="sg-sub">-2 min vs Sarah</div></div>
+          <div class="sg-card"><div class="sg-icon">👥</div><div class="sg-num">100%</div><div class="sg-lbl">En duo</div><div class="sg-sub">Toutes avec Sarah</div></div>
+          <div class="sg-card"><div class="sg-icon">📊</div><div class="sg-num">-2</div><div class="sg-lbl">Retard sur Sarah</div><div class="sg-sub">Sarah mène ce mois</div></div>
+        </div>
+
+        <div class="streak-section au d2">
+          <div class="streak-label">🔥 Streak 6 semaines</div>
+          <div class="weeks">
+            <div class="wk"><div class="wk-bar d"></div><div class="wk-lbl">S1</div></div>
+            <div class="wk"><div class="wk-bar e"></div><div class="wk-lbl">S2</div></div>
+            <div class="wk"><div class="wk-bar d"></div><div class="wk-lbl">S3</div></div>
+            <div class="wk"><div class="wk-bar d"></div><div class="wk-lbl">S4</div></div>
+            <div class="wk"><div class="wk-bar e"></div><div class="wk-lbl">S5</div></div>
+            <div class="wk"><div class="wk-bar d"></div><div class="wk-lbl">S6</div></div>
+            <div class="wk"><div class="wk-bar d"></div><div class="wk-lbl">S7</div></div>
+            <div class="wk"><div class="wk-bar p"></div><div class="wk-lbl" style="color:var(--brand-b);font-weight:800;">→S8</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="height:24px;"></div>
+    </div>
+
+    <!-- ══════════ ASTUCES ══════════ -->
+    <div class="screen" id="screen-tips">
+      <div class="tips-header"><div class="tips-title">Astuces</div><div class="tips-sub">Pour parents actifs</div></div>
+      <div class="tips-cats">
+        <div class="tc active">Tout</div>
+        <div class="tc">⏰ Temps court</div>
+        <div class="tc">💪 Routines</div>
+        <div class="tc">🧠 Motivation</div>
+        <div class="tc">😴 Récupération</div>
+      </div>
+
+      <div class="tip-feat au">
+        <div class="tf-body">
+          <div class="tf-emoji">⚡</div>
+          <div class="tf-title">Le workout de 7 minutes qui change tout</div>
+          <div class="tf-excerpt">Pas besoin d'une heure. 7 minutes de HIIT le matin valent 30 min de cardio classique — parfait pour les matins chargés.</div>
+        </div>
+        <div class="tf-foot"><div class="tf-time">⏱ 3 min · 💪 Intense</div><div class="tf-arr">→</div></div>
+      </div>
+
+      <div class="tip-reg au d1">
+        <div class="tr-body">
+          <div class="tr-emoji" style="background:var(--green-l);">👶</div>
+          <div><div class="tr-title">Sport avec bébé : 5 exercices faisables à la maison</div><div class="tr-excerpt">Intégrez votre enfant dans la séance. Pas de baby-sitter nécessaire.</div></div>
+        </div>
+        <div class="tr-foot"><div class="tr-time">⏱ 2 min · Facile</div><div class="tr-arr">→</div></div>
+      </div>
+
+      <div class="tip-reg au d2">
+        <div class="tr-body">
+          <div class="tr-emoji" style="background:var(--amber-l);">🌅</div>
+          <div><div class="tr-title">Se lever 20 min plus tôt sans souffrir</div><div class="tr-excerpt">Comment reprogrammer votre alarme et en faire une habitude durable.</div></div>
+        </div>
+        <div class="tr-foot"><div class="tr-time">⏱ 4 min</div><div class="tr-arr">→</div></div>
+      </div>
+
+      <div class="tip-reg au d3">
+        <div class="tr-body">
+          <div class="tr-emoji" style="background:var(--blue-l);">🧠</div>
+          <div><div class="tr-title">Sport en groupe : 3× plus de régularité</div><div class="tr-excerpt">Les neurosciences expliquent pourquoi l'engagement collectif change tout.</div></div>
+        </div>
+        <div class="tr-foot"><div class="tr-time">⏱ 5 min · Psychologie</div><div class="tr-arr">→</div></div>
+      </div>
+      <div style="height:24px;"></div>
+    </div>
+
+  </div><!-- /screens -->
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <div class="nav-item active" onclick="showScreen('agenda',this)">
+      <div class="nav-pill">📅</div>
+      <div class="nav-label">Agenda</div>
+    </div>
+    <div class="nav-item" onclick="showScreen('sessions',this)">
+      <div class="nav-pill">🏃</div>
+      <div class="nav-label">Sessions</div>
+    </div>
+    <div class="nav-item" onclick="showScreen('progression',this)">
+      <div class="nav-pill">📈</div>
+      <div class="nav-label">Progression</div>
+    </div>
+    <div class="nav-item" onclick="showScreen('tips',this)">
+      <div class="nav-pill">💡</div>
+      <div class="nav-label">Astuces</div>
+    </div>
+  </nav>
+
+</div><!-- /phone -->
+
+<!-- ═══════ MODAL: FIND CRÉNEAU ═══════ -->
+<div class="overlay" id="modal-find" onclick="closeModal('modal-find',event)">
+  <div class="sheet">
+    <div class="sh-handle"></div>
+    <div class="sh-title">⚡ Créneaux communs</div>
+    <div class="sh-sub">Semaine du 9 mars · vous 2 libres en même temps</div>
+
+    <div class="sug-card sel" onclick="selSug(this)">
+      <div class="sug-radio"></div>
+      <div><div class="sug-t">Jeu 12 · 7h</div><div class="sug-d">45 min dispo</div></div>
+      <div class="sug-i">
+        <div class="sug-l">🏃 Course à pied</div>
+        <div class="sug-m">SA · TH tous les deux libres ✓</div>
+      </div>
+      <div class="sug-s">2/2</div>
+    </div>
+
+    <div class="sug-card" onclick="selSug(this)">
+      <div class="sug-radio"></div>
+      <div><div class="sug-t">Mar 10 · 18h</div><div class="sug-d">30 min dispo</div></div>
+      <div class="sug-i">
+        <div class="sug-l">⚡ HIIT express</div>
+        <div class="sug-m">SA · TH tous les deux libres ✓</div>
+      </div>
+      <div class="sug-s">2/2</div>
+    </div>
+
+    <div class="sug-card" onclick="selSug(this)">
+      <div class="sug-radio"></div>
+      <div><div class="sug-t">Sam 15 · 8h</div><div class="sug-d">30 min dispo</div></div>
+      <div class="sug-i">
+        <div class="sug-l">🧘 Yoga matinal</div>
+        <div class="sug-m">SA libre · TH à confirmer</div>
+      </div>
+      <div class="sug-s" style="color:var(--amber);">1/2</div>
+    </div>
+
+    <div class="sh-btns">
+      <button class="btn-p" style="flex:2;" onclick="proposeSession()">Proposer cette séance →</button>
+      <button class="btn-g" style="flex:1;" onclick="closeModal('modal-find')">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ PARTNER CALENDAR PANEL ═══════ -->
+<div class="partner-panel" id="partner-panel">
+  <div class="pp-header">
+    <div class="pp-title-wrap">
+      <div class="pp-av">TH</div>
+      <div>
+        <div class="pp-name">Thomas B.</div>
+        <div class="pp-sub">Partenaire · Agenda partagé</div>
+      </div>
+    </div>
+    <button class="pp-close" onclick="closePartnerCal()">✕</button>
+  </div>
+
+  <!-- Légende -->
+  <div style="display:flex;gap:10px;padding:0 22px 12px;flex-wrap:wrap;">
+    <div style="display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--ink3);">
+      <div style="width:10px;height:10px;border-radius:3px;background:var(--busy-l);border:1px solid var(--brand-c);"></div>Occupé
+    </div>
+    <div style="display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--ink3);">
+      <div style="width:10px;height:10px;border-radius:3px;background:var(--sport-l);border:1px solid var(--brand-b);"></div>Sport
+    </div>
+    <div style="display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--brand-a);">
+      <div style="width:10px;height:10px;border-radius:3px;background:rgba(59,91,219,0.15);border:1px solid var(--brand-a);"></div>Libre en même temps
+    </div>
+  </div>
+
+  <div class="pp-week-nav">
+    <button class="wn-arrow">‹</button>
+    <div class="pp-week-label">2 – 8 mars 2026</div>
+    <button class="wn-arrow">›</button>
+  </div>
+
+  <!-- Day strip -->
+  <div class="pp-day-strip" id="pp-day-strip">
+    <div></div>
+    <div class="pp-day-col free-day"><div class="pp-ds-name">L</div><div class="pp-ds-num">2</div></div>
+    <div class="pp-day-col busy-day"><div class="pp-ds-name">M</div><div class="pp-ds-num">3</div></div>
+    <div class="pp-day-col busy-day"><div class="pp-ds-name">M</div><div class="pp-ds-num">4</div></div>
+    <div class="pp-day-col free-day"><div class="pp-ds-name">J</div><div class="pp-ds-num">5</div></div>
+    <div class="pp-day-col free-day"><div class="pp-ds-name">V</div><div class="pp-ds-num">6</div></div>
+    <div class="pp-day-col sport-day"><div class="pp-ds-name">S</div><div class="pp-ds-num">7</div></div>
+    <div class="pp-day-col free-day"><div class="pp-ds-name">D</div><div class="pp-ds-num">8</div></div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="pp-timeline-scroll">
+    <div class="pp-timeline-grid" id="pp-timeline-grid"></div>
+  </div>
+
+  <!-- Common slots CTA -->
+  <div style="padding:12px 22px 0;">
+    <div style="background:var(--grad-soft);border-radius:var(--r);padding:14px 16px;border:1.5px solid rgba(59,91,219,0.2);">
+      <div style="font-size:11px;font-weight:800;color:var(--brand-b);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px;">⚡ Créneaux communs cette semaine</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-radius:10px;padding:8px 12px;">
+          <div style="font-size:13px;font-weight:700;color:var(--ink);">Lun 2 · 7h00</div>
+          <div style="font-size:11px;color:var(--ink3);">45 min libres</div>
+          <span class="tag tag-g" style="font-size:10px;">2/2 ✓</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-radius:10px;padding:8px 12px;">
+          <div style="font-size:13px;font-weight:700;color:var(--ink);">Jeu 5 · 18h00</div>
+          <div style="font-size:11px;color:var(--ink3);">30 min libres</div>
+          <span class="tag tag-g" style="font-size:10px;">2/2 ✓</span>
+        </div>
+      </div>
+      <button class="btn-p" style="margin-top:12px;" onclick="closePartnerCal(); openFindModal();">⚡ Proposer une séance</button>
+    </div>
+  </div>
+  <div style="height:30px;"></div>
+</div>
+
+<!-- ═══════ NOTIFICATION PANEL ═══════ -->
+<div class="notif-panel" id="notif-panel">
+
+  <!-- Header -->
+  <div class="np-header">
+    <div class="np-title">Notifications</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button id="np-read-btn" onclick="markAllRead()" style="background:var(--sport-l);color:var(--brand-b);border:none;border-radius:10px;padding:6px 12px;font-size:11px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;">Tout lire</button>
+      <button class="np-close" onclick="closeNotifs()">✕</button>
+    </div>
+  </div>
+
+  <!-- Tab switcher: Notifs / Préférences -->
+  <div style="display:flex;padding:0 22px 14px;gap:6px;">
+    <button class="np-tab active" id="np-tab-notifs" onclick="switchNotifTab('notifs')">🔔 Mes notifs</button>
+    <button class="np-tab" id="np-tab-prefs" onclick="switchNotifTab('prefs')">⚙️ Préférences</button>
+  </div>
+
+  <!-- ── VUE NOTIFS ── -->
+  <div id="np-notifs-view">
+    <!-- Filter chips -->
+    <div class="np-filters" id="np-filters">
+      <div class="npf active" data-filter="all" onclick="filterNotifs('all',this)">Toutes</div>
+      <div class="npf" data-filter="streak" onclick="filterNotifs('streak',this)">🔥 Streak</div>
+      <div class="npf" data-filter="slot" onclick="filterNotifs('slot',this)">⚡ Créneaux</div>
+      <div class="npf" data-filter="confirm" onclick="filterNotifs('confirm',this)">✅ Séances</div>
+      <div class="npf" data-filter="badge" onclick="filterNotifs('badge',this)">🏅 Badges</div>
+      <div class="npf" data-filter="social" onclick="filterNotifs('social',this)">👥 Social</div>
+    </div>
+
+    <div id="np-notifs-list">
+      <!-- Aujourd'hui -->
+      <div class="notif-group-label" data-group="today">Aujourd'hui</div>
+
+      <div class="ncard unread streak" data-type="streak" onclick="markRead(this)">
+        <div class="ni-icon ni-streak">🔥</div>
+        <div class="ni-body">
+          <div class="ni-title">Streak de 3 semaines en duo ! 🔥</div>
+          <div class="ni-sub">Toi et Thomas : 3 semaines consécutives ensemble. Continue !</div>
+          <div class="ni-time">Il y a 12 min</div>
+        </div>
+        <div class="ni-dot"></div>
+      </div>
+
+      <div class="ncard unread slot" data-type="slot" onclick="markRead(this); closeNotifs(); openFindModal()">
+        <div class="ni-icon ni-slot">⚡</div>
+        <div class="ni-body">
+          <div class="ni-title">Créneau commun trouvé !</div>
+          <div class="ni-sub">Jeu 12 mars · 7h00 — vous 2 libres. 45 min dispo.</div>
+          <div class="ni-time">Il y a 35 min</div>
+        </div>
+        <div class="ni-dot"></div>
+      </div>
+
+      <div class="ncard unread confirm" data-type="confirm" onclick="markRead(this)">
+        <div class="ni-icon ni-confirm">✅</div>
+        <div class="ni-body">
+          <div class="ni-title">Thomas a confirmé la séance 🎉</div>
+          <div class="ni-sub">Course à pied · Jeu 12 mars 7h00. C'est confirmé !</div>
+          <div class="ni-time">Il y a 1h</div>
+        </div>
+        <div class="ni-dot"></div>
+      </div>
+
+      <!-- Cette semaine -->
+      <div class="notif-group-label" style="margin-top:14px;" data-group="week">Cette semaine</div>
+
+      <div class="ncard read badge" data-type="badge" onclick="markRead(this)">
+        <div class="ni-icon ni-badge">🏅</div>
+        <div class="ni-body">
+          <div class="ni-title">Badge « Inséparables » débloqué</div>
+          <div class="ni-sub">10 séances en duo ce mois. Félicitations !</div>
+          <div class="ni-time">Lun 4 mars</div>
+        </div>
+        <div class="ni-dot"></div>
+      </div>
+
+      <div class="ncard read social" data-type="social" onclick="markRead(this)">
+        <div class="ni-icon ni-social">👥</div>
+        <div class="ni-body">
+          <div class="ni-title">Thomas a proposé une séance</div>
+          <div class="ni-sub">Yoga matinal · Sam 15 mars 8h00. Il attend ta réponse !</div>
+          <div class="ni-time">Dim 2 mars</div>
+        </div>
+        <div class="ni-dot"></div>
+      </div>
+
+      <div class="ncard read slot" data-type="slot" onclick="markRead(this)">
+        <div class="ni-icon ni-slot">📅</div>
+        <div class="ni-body">
+          <div class="ni-title">3 créneaux communs cette semaine</div>
+          <div class="ni-sub">Semaine du 9 mars — 3 fenêtres libres en même temps.</div>
+          <div class="ni-time">Sam 1 mars</div>
+        </div>
+        <div class="ni-dot"></div>
+      </div>
+
+      <!-- Mois dernier -->
+      <div class="notif-group-label" style="margin-top:14px;" data-group="month">Mois dernier</div>
+
+      <div class="ncard read streak" data-type="streak" onclick="markRead(this)">
+        <div class="ni-icon ni-streak">🔥</div>
+        <div class="ni-body">
+          <div class="ni-title">Objectif mensuel atteint !</div>
+          <div class="ni-sub">4 séances en février. Objectif dépassé de 25%.</div>
+          <div class="ni-time">Ven 28 fév</div>
+        </div>
+        <div class="ni-dot"></div>
+      </div>
+
+      <div class="ncard read badge" data-type="badge" onclick="markRead(this)">
+        <div class="ni-icon ni-tip">💡</div>
+        <div class="ni-body">
+          <div class="ni-title">Nouveau conseil : HIIT de 7 min</div>
+          <div class="ni-sub">Un contenu adapté à ton niveau t'attend dans Astuces.</div>
+          <div class="ni-time">Mer 26 fév</div>
+        </div>
+        <div class="ni-dot"></div>
+      </div>
+    </div><!-- /np-notifs-list -->
+  </div><!-- /np-notifs-view -->
+
+  <!-- ── VUE PRÉFÉRENCES ── -->
+  <div id="np-prefs-view" style="display:none;">
+    <div style="padding:0 22px;">
+
+      <div style="font-size:11px;font-weight:800;color:var(--ink3);text-transform:uppercase;letter-spacing:0.09em;margin-bottom:14px;">Activer / désactiver</div>
+
+      <!-- Toggle rows -->
+      <div class="pref-card">
+
+        <div class="pref-row" id="pref-streak">
+          <div class="pref-icon" style="background:linear-gradient(135deg,#FFE4F2,#FFB3D9);">🔥</div>
+          <div class="pref-info">
+            <div class="pref-label">Streaks & objectifs</div>
+            <div class="pref-desc">Séries de semaines, records personnels</div>
+          </div>
+          <div class="pref-toggle on" onclick="togglePref(this,'streak')"><div class="pref-knob"></div></div>
+        </div>
+
+        <div class="pref-row" id="pref-slot">
+          <div class="pref-icon" style="background:var(--sport-l);">⚡</div>
+          <div class="pref-info">
+            <div class="pref-label">Créneaux détectés</div>
+            <div class="pref-desc">Quand un créneau commun est trouvé</div>
+          </div>
+          <div class="pref-toggle on" onclick="togglePref(this,'slot')"><div class="pref-knob"></div></div>
+        </div>
+
+        <div class="pref-row" id="pref-confirm">
+          <div class="pref-icon" style="background:var(--free-l);">✅</div>
+          <div class="pref-info">
+            <div class="pref-label">Confirmations de séance</div>
+            <div class="pref-desc">Quand Thomas confirme ou annule</div>
+          </div>
+          <div class="pref-toggle on" onclick="togglePref(this,'confirm')"><div class="pref-knob"></div></div>
+        </div>
+
+        <div class="pref-row" id="pref-badge">
+          <div class="pref-icon" style="background:linear-gradient(135deg,var(--sport-l),var(--busy-l));">🏅</div>
+          <div class="pref-info">
+            <div class="pref-label">Badges & récompenses</div>
+            <div class="pref-desc">Nouveaux badges débloqués</div>
+          </div>
+          <div class="pref-toggle on" onclick="togglePref(this,'badge')"><div class="pref-knob"></div></div>
+        </div>
+
+        <div class="pref-row" id="pref-social">
+          <div class="pref-icon" style="background:var(--free-l);">👥</div>
+          <div class="pref-info">
+            <div class="pref-label">Activité de Thomas</div>
+            <div class="pref-desc">Propositions, messages, séances</div>
+          </div>
+          <div class="pref-toggle on" onclick="togglePref(this,'social')"><div class="pref-knob"></div></div>
+        </div>
+
+        <div class="pref-row" style="border-bottom:none;" id="pref-tip">
+          <div class="pref-icon" style="background:var(--surface2);">💡</div>
+          <div class="pref-info">
+            <div class="pref-label">Conseils & astuces</div>
+            <div class="pref-desc">Nouveaux contenus dans Astuces</div>
+          </div>
+          <div class="pref-toggle on" onclick="togglePref(this,'tip')"><div class="pref-knob"></div></div>
+        </div>
+
+      </div><!-- /pref-card -->
+
+      <div style="font-size:11px;font-weight:800;color:var(--ink3);text-transform:uppercase;letter-spacing:0.09em;margin:20px 0 14px;">Fréquence</div>
+
+      <div class="pref-card">
+        <div class="pref-row">
+          <div class="pref-icon" style="background:var(--amber-l);">🔔</div>
+          <div class="pref-info">
+            <div class="pref-label">Résumé quotidien</div>
+            <div class="pref-desc">Un récap chaque soir à 20h</div>
+          </div>
+          <div class="pref-toggle on" onclick="togglePref(this,'daily')"><div class="pref-knob"></div></div>
+        </div>
+        <div class="pref-row" style="border-bottom:none;">
+          <div class="pref-icon" style="background:var(--sport-l);">📴</div>
+          <div class="pref-info">
+            <div class="pref-label">Ne pas déranger</div>
+            <div class="pref-desc">Silence de 22h à 7h</div>
+          </div>
+          <div class="pref-toggle on" onclick="togglePref(this,'dnd')"><div class="pref-knob"></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /np-prefs-view -->
+
+  <div style="height:30px;"></div>
+</div>
+
+<!-- ═══════ MODAL: CONFIRM ═══════ -->
+<div class="overlay confirm-modal" id="modal-confirm">
+  <div class="sheet">
+    <div class="sh-handle"></div>
+    <div style="text-align:center;">
+      <span class="cm-icon pi">🎉</span>
+      <div class="cm-title">Séance proposée !</div>
+      <div class="cm-sub">Thomas a reçu une notification.<br>Tu seras averti(e) dès confirmation.</div>
+      <div class="cm-box">
+        <div class="cm-box-lbl">Séance proposée</div>
+        <div class="cm-box-title">🏃 Course à pied</div>
+        <div class="cm-box-sub">Jeudi 12 mars · 7h00 – 7h45 · 2 participants</div>
+      </div>
+      <button class="btn-p" onclick="closeConfirm()">Parfait, merci ! 🙌</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════
+const DAYS = ['L','M','M','J','V','S','D'];
+const DAYS_FULL = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
+
+let weekOffset = 0;
+
+const WEEKS = [
+  { start: [2026,2,2],  label: '2 – 8 mars 2026' },
+  { start: [2026,2,9],  label: '9 – 15 mars 2026' },
+  { start: [2026,2,16], label: '16 – 22 mars 2026' },
+  { start: [2026,2,23], label: '23 – 29 mars 2026' },
+];
+
+// TODAY = Mar 7 = weekOffset 0, dayIdx 5
+const TODAY_WEEK = 0, TODAY_DAY = 5, TODAY_HOUR = 9;
+
+// Events: { dayIdx: [ {type, title, sub, startH, endH} ] }
+// Types: 'busy' | 'sport' | 'sport-proposed' | 'free'
+const WEEK_EVENTS = {
+  0: {
+    0: [ {type:'busy',     title:'Réunion client',      sub:'Salle B',        startH:9,  endH:11 },
+         {type:'free',     title:'Créneau libre',        sub:'Dispo sport',    startH:7,  endH:8  } ],
+    1: [ {type:'sport',    title:'🏃 Course à pied',     sub:'Parc Bordelais', startH:7,  endH:7.75},
+         {type:'busy',     title:'Médecin',              sub:'Cabinet Dupont', startH:10, endH:11 },
+         {type:'busy',     title:'Réunion budget',       sub:'Visio',          startH:14, endH:15.5} ],
+    2: [ {type:'free',     title:'Créneau libre',        sub:'Dispo sport',    startH:8,  endH:9  } ],
+    3: [ {type:'free',     title:'Créneau sport',        sub:'SA+TH libres !', startH:7,  endH:8  },
+         {type:'busy',     title:'Dentiste',             sub:'Dr Martin',      startH:10, endH:10.5} ],
+    4: [ {type:'busy',     title:'Déjeuner équipe',      sub:'Resto Le Moulin',startH:12.5,endH:14},
+         {type:'free',     title:'Créneau libre',        sub:'Soir dispo',     startH:18, endH:19 } ],
+    5: [ {type:'sport',    title:'🧘 Yoga matinal',      sub:'SA · TH',    startH:8,  endH:8.5} ],
+    6: [ {type:'free',     title:'Week-end libre',       sub:'',               startH:9,  endH:10 } ],
+  },
+  1: {
+    0: [ {type:'busy',     title:'Présentation projet',  sub:'Conf room',      startH:9,  endH:12 } ],
+    1: [ {type:'sport-proposed', title:'⚡ HIIT express', sub:'SA + TH · 18h',  startH:18, endH:18.5} ],
+    2: [ {type:'busy',     title:'Formation RH',         sub:'En ligne',       startH:14, endH:16 } ],
+    3: [ {type:'sport',    title:'🏃 Course commune',    sub:'SA · TH',        startH:7,  endH:7.75},
+         {type:'busy',     title:'Pédiatre',             sub:'Dr Leroy',       startH:9,  endH:10 } ],
+    4: [ {type:'sport',    title:'⚡ HIIT',              sub:'Thomas + toi',   startH:18, endH:18.5},
+         {type:'busy',     title:'Call client',          sub:'US timezone',    startH:16, endH:17 } ],
+    5: [ {type:'sport',    title:'🧘 Yoga matinal',      sub:'SA · TH confirmés ✓', startH:8, endH:8.5} ],
+    6: [],
+  },
+  2: {
+    0: [ {type:'busy',     title:'Sprint review',        sub:'Équipe produit', startH:10, endH:12 } ],
+    1: [ {type:'free',     title:'Créneau libre',        sub:'Dispo sport',    startH:7,  endH:8.5} ],
+    3: [ {type:'sport-proposed', title:'🚴 Vélo',        sub:'SA + TH',        startH:7,  endH:8  } ],
+    5: [ {type:'busy',     title:'Anniversaire',         sub:'Fête famille',   startH:16, endH:22 } ],
+  },
+  3: {
+    1: [ {type:'sport',    title:'🏊 Natation',          sub:'Piscine Bacalan',startH:7,  endH:8  } ],
+    3: [ {type:'free',     title:'Créneau sport',        sub:'Dispo',          startH:7,  endH:8.5} ],
+    5: [ {type:'sport',    title:'🏃 Course',            sub:'SA · TH',        startH:8,  endH:9  } ],
+  }
+};
+
+// Hours to display: 7h → 20h
+const HOUR_START = 7, HOUR_END = 20;
+const CELL_H = 44; // px per hour
+
+// ═══════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════
+function showScreen(name, el) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  el.classList.add('active');
+}
+
+// ═══════════════════════════════════════
+// VIEW TOGGLE
+// ═══════════════════════════════════════
+function setView(v) {
+  document.getElementById('btn-week').classList.toggle('active', v==='week');
+  document.getElementById('btn-month').classList.toggle('active', v==='month');
+  document.getElementById('view-week').style.display = v==='week' ? 'block' : 'none';
+  document.getElementById('view-month').style.display = v==='month' ? 'block' : 'none';
+  document.querySelector('#view-month').classList.toggle('visible', v==='month');
+  if (v==='month') buildMonthGrid();
+}
+
+// ═══════════════════════════════════════
+// WEEK TIMELINE
+// ═══════════════════════════════════════
+function buildWeekTimeline() {
+  const w = WEEKS[Math.min(weekOffset, WEEKS.length-1)];
+  document.getElementById('week-range').textContent = w.label;
+  const [y,m,d] = w.start;
+
+  // ── Day strip header ──
+  const strip = document.getElementById('day-strip');
+  strip.innerHTML = '<div class="day-strip-spacer"></div>';
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(y, m-1, d+i);
+    const isToday = (weekOffset === TODAY_WEEK && i === TODAY_DAY);
+    const cls = 'day-strip-col' + (isToday ? ' today' : '');
+    strip.innerHTML += `
+      <div class="${cls}" onclick="scrollToNow()">
+        <div class="ds-name">${DAYS[i]}</div>
+        <div class="ds-num">${date.getDate()}</div>
+      </div>`;
+  }
+
+  // ── Timeline grid ──
+  const grid = document.getElementById('timeline-grid');
+  grid.innerHTML = '';
+
+  const hours = HOUR_END - HOUR_START;
+
+  // Build row by row (hour by hour)
+  for (let h = HOUR_START; h < HOUR_END; h++) {
+    // Hour label
+    grid.innerHTML += `<div class="tl-hour">${h}h</div>`;
+    // 7 day cells
+    for (let col = 0; col < 7; col++) {
+      const isToday = (weekOffset === TODAY_WEEK && col === TODAY_DAY);
+      const cellStyle = isToday ? 'background:rgba(42,84,37,0.025);' : '';
+      grid.innerHTML += `<div class="tl-cell" style="${cellStyle}" data-col="${col}" data-h="${h}"></div>`;
+    }
+  }
+
+  // ── Place event vignettes ──
+  const weekEvs = WEEK_EVENTS[weekOffset] || {};
+  for (let col = 0; col < 7; col++) {
+    const evs = weekEvs[col] || [];
+    evs.forEach(ev => {
+      const topOffset = (ev.startH - HOUR_START) * CELL_H;
+      const height = Math.max((ev.endH - ev.startH) * CELL_H - 3, 22);
+      const colCells = grid.querySelectorAll(`.tl-cell[data-col="${col}"]`);
+      if (!colCells.length) return;
+      // Find the cell for this hour row
+      const rowIdx = Math.floor(ev.startH - HOUR_START);
+      const cell = colCells[Math.min(rowIdx, colCells.length-1)];
+      if (!cell) return;
+
+      const vig = document.createElement('div');
+      vig.className = `ev-vignette ev-${ev.type.replace('-','_').replace('_proposed','_sport_proposed').replace('sport_sport','sport')}`;
+      // Fix class name
+      vig.className = `ev-vignette`;
+      if (ev.type === 'sport') vig.classList.add('ev-sport');
+      else if (ev.type === 'sport-proposed') vig.classList.add('ev-sport-proposed');
+      else if (ev.type === 'busy') vig.classList.add('ev-busy');
+      else vig.classList.add('ev-free');
+
+      const subFrac = ev.startH - Math.floor(ev.startH);
+      vig.style.cssText = `top:${subFrac * CELL_H}px; height:${height}px;`;
+      vig.innerHTML = `<div>${ev.title}</div>${ev.sub && height > 30 ? `<div class="ev-v-label">${ev.sub}</div>` : ''}`;
+      vig.onclick = (e) => { e.stopPropagation(); showEventDetail(ev); };
+      cell.style.position = 'relative';
+      cell.appendChild(vig);
+    });
+  }
+
+  // ── Now indicator ──
+  if (weekOffset === TODAY_WEEK) {
+    const nowOffset = (TODAY_HOUR - HOUR_START) * CELL_H + 20;
+    const nowCells = grid.querySelectorAll(`.tl-cell[data-col="${TODAY_DAY}"]`);
+    if (nowCells[0]) {
+      const nowEl = document.createElement('div');
+      nowEl.className = 'now-line';
+      nowEl.style.cssText = `top:${NOW_TOP(grid)}px; left:0;`;
+      grid.style.position = 'relative';
+      // Place across full row
+      placeNowLine(grid);
+    }
+  }
+}
+
+function NOW_TOP(grid) {
+  return (TODAY_HOUR - HOUR_START) * CELL_H + 22;
+}
+
+function placeNowLine(grid) {
+  // Calculate position in the full grid
+  const gridCols = 8; // 1 label + 7 days
+  const rowH = CELL_H;
+  const nowRow = TODAY_HOUR - HOUR_START;
+  const nowTopPx = nowRow * rowH + 22;
+
+  // Create absolute line spanning all 7 day columns
+  const line = document.createElement('div');
+  line.style.cssText = `
+    position:absolute;
+    top:${nowTopPx}px;
+    left: calc(36px + 3px + ${TODAY_DAY} * (100% - 36px - ${6*3}px) / 7);
+    width: calc((100% - 36px - ${6*3}px) / 7);
+    height:2px;
+    background:var(--brand-c);
+    z-index:5;
+    pointer-events:none;
+  `;
+  line.innerHTML = `<div style="position:absolute;left:-4px;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--brand-c);"></div>`;
+  grid.style.position = 'relative';
+  grid.appendChild(line);
+}
+
+function scrollToNow() {
+  const scroll = document.querySelector('.timeline-scroll');
+  if (scroll) {
+    const nowPx = (TODAY_HOUR - HOUR_START - 1) * CELL_H;
+    scroll.scrollTop = Math.max(0, nowPx);
+  }
+}
+
+function showEventDetail(ev) {
+  const labels = { sport:'Séance sport', 'sport-proposed':'Séance proposée', busy:'Occupé', free:'Créneau libre' };
+  alert(`${ev.title}\n${ev.sub}\n${ev.startH}h – ${ev.endH}h\n(${labels[ev.type]||''}) `);
+}
+
+function moveWeek(dir) {
+  weekOffset = Math.max(0, Math.min(WEEKS.length-1, weekOffset+dir));
+  buildWeekTimeline();
+}
+
+// ═══════════════════════════════════════
+// MONTH VIEW
+// ═══════════════════════════════════════
+function buildMonthGrid() {
+  const g = document.getElementById('mv-grid');
+  g.innerHTML = '';
+  DAYS.forEach(d => g.innerHTML += `<div class="mv-dayname">${d}</div>`);
+
+  const startOffset = 6; // Mar 1 = Sunday → offset 6
+  for (let i=0;i<startOffset;i++) {
+    const fd = 28-startOffset+1+i;
+    g.innerHTML += `<div class="mv-cell other"><div class="mv-num">${fd}</div></div>`;
+  }
+
+  const sportDays=[3,12,15,22,27];
+  const busyDays=[10,11,18,19,20,24,25];
+
+  for(let d=1;d<=31;d++){
+    const isToday = d===7;
+    const hasSport = sportDays.includes(d);
+    
+    const isBusy = busyDays.includes(d);
+    let cls = 'mv-cell';
+    if(isToday) cls+=' today';
+    let dots = '';
+    if(hasSport) dots += `<div class="mv-dot" style="background:var(--lime);"></div>`;
+    if(isBusy) dots += `<div class="mv-dot" style="background:var(--amber);"></div>`;
+    g.innerHTML += `
+      <div class="${cls}" onclick="selectMonthDay(${d})">
+        <div class="mv-num">${d}</div>
+        <div class="mv-dots">${dots}</div>
+      </div>`;
+  }
+
+  const remaining = 42 - startOffset - 31;
+  for(let i=1;i<=remaining;i++) g.innerHTML += `<div class="mv-cell other"><div class="mv-num">${i}</div></div>`;
+}
+
+function selectMonthDay(d) {
+  document.querySelectorAll('#mv-grid .mv-cell:not(.other)').forEach((c,i) => {
+    c.classList.toggle('has-selected', i+1===d);
+  });
+}
+
+// ═══════════════════════════════════════
+// PARTNER CALENDAR
+// ═══════════════════════════════════════
+const THOMAS_EVENTS = {
+  // week 0: Mar 2–8
+  0: {
+    0: [ {type:'free',  title:'Créneau libre',     sub:'Dispo sport',    startH:7,  endH:8   } ],
+    1: [ {type:'busy',  title:'Formation équipe',  sub:'Présentiel',     startH:9,  endH:12  },
+         {type:'busy',  title:'Récup enfants',     sub:'École 16h30',    startH:16.5,endH:18 } ],
+    2: [ {type:'busy',  title:'Télétravail chargé',sub:'Réunions',       startH:9,  endH:17  } ],
+    3: [ {type:'free',  title:'Matin libre',       sub:'Dispo sport',    startH:7,  endH:9   },
+         {type:'busy',  title:'Déjeuner client',   sub:'',               startH:12.5,endH:14 } ],
+    4: [ {type:'free',  title:'Créneau libre',     sub:'Dispo sport',    startH:18, endH:19  } ],
+    5: [ {type:'sport', title:'🏃 Course (duo)',   sub:'Avec Sarah 8h',  startH:8,  endH:8.75} ],
+    6: [ {type:'free',  title:'Week-end',          sub:'',               startH:9,  endH:11  } ],
+  }
+};
+
+// Overlap: days where both SA and TH are free (for highlight)
+const OVERLAP_DAYS = [0, 3, 4]; // Mon, Thu, Fri
+
+function openPartnerCal() {
+  buildPartnerTimeline();
+  document.getElementById('partner-panel').classList.add('open');
+}
+function closePartnerCal() {
+  document.getElementById('partner-panel').classList.remove('open');
+}
+
+function buildPartnerTimeline() {
+  const grid = document.getElementById('pp-timeline-grid');
+  grid.innerHTML = '';
+  const HOUR_START = 7, HOUR_END = 20, CELL_H = 44;
+
+  // Build rows
+  for (let h = HOUR_START; h < HOUR_END; h++) {
+    grid.innerHTML += `<div class="pp-tl-hour">${h}h</div>`;
+    for (let col = 0; col < 7; col++) {
+      const isOverlap = OVERLAP_DAYS.includes(col);
+      grid.innerHTML += `<div class="pp-tl-cell" data-pcol="${col}" data-ph="${h}">${isOverlap ? '<div class="overlap-bar"></div>' : ''}</div>`;
+    }
+  }
+
+  // Place Thomas events
+  const evs = THOMAS_EVENTS[0] || {};
+  for (let col = 0; col < 7; col++) {
+    const dayEvs = evs[col] || [];
+    dayEvs.forEach(ev => {
+      const cells = grid.querySelectorAll(`.pp-tl-cell[data-pcol="${col}"]`);
+      const rowIdx = Math.floor(ev.startH - HOUR_START);
+      const cell = cells[Math.min(rowIdx, cells.length-1)];
+      if (!cell) return;
+      const subFrac = (ev.startH - Math.floor(ev.startH)) * CELL_H;
+      const height = Math.max((ev.endH - ev.startH) * CELL_H - 3, 22);
+      const vig = document.createElement('div');
+      vig.className = 'ev-vignette';
+      if (ev.type === 'sport') vig.classList.add('ev-sport');
+      else if (ev.type === 'busy') vig.classList.add('ev-busy');
+      else vig.classList.add('ev-free');
+      vig.style.cssText = `top:${subFrac}px;height:${height}px;`;
+      vig.innerHTML = `<div>${ev.title}</div>${ev.sub && height > 30 ? `<div class="ev-v-label">${ev.sub}</div>` : ''}`;
+      cell.style.position = 'relative';
+      cell.appendChild(vig);
+    });
+  }
+
+  // Overlap labels on first overlap row
+  OVERLAP_DAYS.forEach(col => {
+    const cells = grid.querySelectorAll(`.pp-tl-cell[data-pcol="${col}"]`);
+    if (cells[0]) {
+      const lbl = document.createElement('div');
+      lbl.className = 'overlap-label';
+      lbl.textContent = '2/2';
+      cells[0].appendChild(lbl);
+    }
+  });
+}
+
+// ═══════════════════════════════════════
+// PROGRESSION TOGGLE
+// ═══════════════════════════════════════
+function switchProg(who) {
+  document.getElementById('pt-moi').classList.toggle('active', who === 'moi');
+  document.getElementById('pt-thomas').classList.toggle('active', who === 'thomas');
+  document.getElementById('prog-moi').style.display = who === 'moi' ? 'block' : 'none';
+  document.getElementById('prog-thomas').style.display = who === 'thomas' ? 'block' : 'none';
+}
+
+
+let unreadCount = 3;
+
+// ── Panel open/close ──
+function openNotifs() {
+  document.getElementById('notif-panel').classList.add('open');
+}
+function closeNotifs() {
+  document.getElementById('notif-panel').classList.remove('open');
+  updateBellCount();
+}
+
+// ── Tab switcher: Notifs ↔ Préférences ──
+function switchNotifTab(tab) {
+  const isNotifs = tab === 'notifs';
+  document.getElementById('np-tab-notifs').classList.toggle('active', isNotifs);
+  document.getElementById('np-tab-prefs').classList.toggle('active', !isNotifs);
+  document.getElementById('np-notifs-view').style.display  = isNotifs ? 'block' : 'none';
+  document.getElementById('np-prefs-view').style.display   = isNotifs ? 'none'  : 'block';
+  document.getElementById('np-read-btn').style.display     = isNotifs ? ''      : 'none';
+}
+
+// ── Filter chips ──
+let activeFilter = 'all';
+function filterNotifs(type, chip) {
+  activeFilter = type;
+  document.querySelectorAll('.npf').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  applyFilter();
+}
+
+function applyFilter() {
+  const cards = document.querySelectorAll('#np-notifs-list .ncard');
+  cards.forEach(card => {
+    const t = card.dataset.type;
+    const visible = activeFilter === 'all' || t === activeFilter;
+    // also hide if pref for this type is OFF
+    const prefOff = disabledPrefs.has(t);
+    card.classList.toggle('np-hidden', !visible || prefOff);
+  });
+  // Show/hide group labels based on visible cards
+  document.querySelectorAll('#np-notifs-list .notif-group-label').forEach(lbl => {
+    // find next siblings until next label
+    let el = lbl.nextElementSibling;
+    let hasVisible = false;
+    while (el && !el.classList.contains('notif-group-label')) {
+      if (!el.classList.contains('np-hidden') && el.classList.contains('ncard')) hasVisible = true;
+      el = el.nextElementSibling;
+    }
+    lbl.style.display = hasVisible ? '' : 'none';
+  });
+}
+
+// ── Mark read ──
+function markRead(card) {
+  if (!card.classList.contains('read')) {
+    card.classList.remove('unread');
+    card.classList.add('read');
+    unreadCount = Math.max(0, unreadCount - 1);
+    updateBellCount();
+  }
+}
+function markAllRead() {
+  document.querySelectorAll('.ncard.unread').forEach(c => {
+    c.classList.remove('unread'); c.classList.add('read');
+  });
+  unreadCount = 0;
+  updateBellCount();
+}
+function updateBellCount() {
+  const dot = document.getElementById('bell-dot');
+  if (unreadCount === 0) dot.style.display = 'none';
+  else { dot.style.display = 'flex'; dot.textContent = unreadCount; }
+}
+
+// ── Preferences / toggles ──
+const disabledPrefs = new Set();
+
+function togglePref(toggle, key) {
+  const isOn = toggle.classList.contains('on');
+  toggle.classList.toggle('on', !isOn);
+  const row = toggle.closest('.pref-row');
+
+  if (isOn) {
+    // turning OFF
+    disabledPrefs.add(key);
+    row.classList.add('disabled');
+  } else {
+    // turning ON
+    disabledPrefs.delete(key);
+    row.classList.remove('disabled');
+  }
+  applyFilter();
+}
+
+
+function openFindModal() { document.getElementById('modal-find').classList.add('open'); }
+
+function closeModal(id, e) {
+  if (!e || e.target === document.getElementById(id))
+    document.getElementById(id).classList.remove('open');
+}
+
+function selSug(card) {
+  document.querySelectorAll('.sug-card').forEach(c => c.classList.remove('sel'));
+  card.classList.add('sel');
+}
+
+function proposeSession() {
+  closeModal('modal-find');
+  setTimeout(() => document.getElementById('modal-confirm').classList.add('open'), 220);
+}
+
+function closeConfirm() {
+  document.getElementById('modal-confirm').classList.remove('open');
+  setTimeout(() => showScreen('sessions', document.querySelectorAll('.nav-item')[1]), 300);
+}
+
+function confirmSess(btn) {
+  const card = btn.closest('.scard');
+  const row = btn.closest('.sc-confirm');
+  row.innerHTML = '<div class="confirmed-badge pi">✓ Tu as confirmé ! La séance est validée 🎉</div>';
+  card.querySelector('.scard-accent').style.background = 'var(--grad)';
+  card.querySelector('.tag').className = 'tag tag-g';
+  card.querySelector('.tag').textContent = 'Confirmée ✓';
+}
+
+function switchSessTab(btn, tab) {
+  document.querySelectorAll('.s-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('sess-up').style.display = tab==='up' ? 'block' : 'none';
+  document.getElementById('sess-past').style.display = tab==='past' ? 'block' : 'none';
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+buildWeekTimeline();
+</script>
+</body>
+</html>
